@@ -115,13 +115,14 @@ static void GUI_Init(void)
 //==========================================================================
 static void GUI_Welcome(void)
 {
-	printf("\n    Mouse Injector for %s %s\n%s\n\n   Addendum - Please Read before Use\n\n\n\n", DOLPHINVERSION, BUILDINFO, LINE);
+	printf("\n    Mouse Injector for %s %s\n%s\n\n   Addendum - Please Read before Use\n\n\n", DOLPHINVERSION, BUILDINFO, LINE);
 	printf("    1)  This is a unfinished test, expect issues and crashes\n\n");
 	printf("    2)  You must use the included Dolphin bundle or it will not work\n\n");
 	printf("    3)  Please do not install over different versions of Dolphin\n\n");
 	printf("    4)  All sub-systems are unsupported - use arrow keys for sentries/map maker\n\n");
-	printf("    5)  Press insert in the main menu to list supported games\n\n");
-	printf("    6)  Read readme.txt for a quick start guide - thank you and enjoy\n\n\n\n");
+	printf("    5)  NetPlay is unsupported - it will not synchronization memory injection\n\n");
+	printf("    6)  Press insert in the main menu to list supported games (NTSC only)\n\n");
+	printf("    7)  Read readme.txt for a quick start guide - thank you and enjoy\n\n\n");
 	printf("   Press CTRL+1 to confirm you've read this message...\n%s\n", LINE);
 	while(!welcomed)
 	{
