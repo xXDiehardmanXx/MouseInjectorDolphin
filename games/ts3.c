@@ -23,6 +23,10 @@
 #include "../mouse.h"
 #include "game.h"
 
+#define MAPMAKERXMIN 1.f // mapmaker cursor limits
+#define MAPMAKERYMIN 0.f
+#define MAPMAKERXMAX 98.f
+#define MAPMAKERYMAX 96.f
 // TS3 ADDRESSES - OFFSET ADDRESSES BELOW (REQUIRES PLAYERBASE TO USE)
 #define TS3_camx 0x810D7280 - 0x810D7180
 #define TS3_camy 0x810D7284 - 0x810D7180
@@ -36,6 +40,8 @@
 #define TS3_fovbase 0x80611D5C // fov base pointer
 #define TS3_crosshairsetting 0x80501680 // crosshair settings (1 == on and moving)
 #define TS3_yaxislimit 0x80611D7C
+#define TS3_mapmakerx 0x8051A82C
+#define TS3_mapmakery 0x8051A830
 
 static uint8_t TS3_Status(void);
 static void TS3_Inject(void);
@@ -65,6 +71,14 @@ static void TS3_Inject(void)
 		return;
 	if(MEM_ReadInt(TS3_yaxislimit) != 0x42A00000) // overwrite y axis limit from 60 degrees (SP) or 75 degrees (MP)
 		MEM_WriteFloat(TS3_yaxislimit, 80.f);
+	float cursorx = MEM_ReadFloat(TS3_mapmakerx), cursory = MEM_ReadFloat(TS3_mapmakery);
+	if(cursorx >= MAPMAKERXMIN && cursorx <= MAPMAKERXMAX && cursory >= MAPMAKERYMIN && cursory <= MAPMAKERYMAX) // if mapmaker cursor is safe to inject
+	{
+		cursorx += (float)xmouse / 7.5f * ((float)sensitivity / 40.f); // calculate mapmaker cursor movement
+		cursory += (float)ymouse / 7.5f * ((float)sensitivity / 40.f);
+		MEM_WriteFloat(TS3_mapmakerx, ClampFloat(cursorx, MAPMAKERXMIN, MAPMAKERXMAX));
+		MEM_WriteFloat(TS3_mapmakery, ClampFloat(cursory, MAPMAKERYMIN, MAPMAKERYMAX));
+	}
 	const uint32_t playerbase = (uint32_t)MEM_ReadInt(TS3_playerbase);
 	const uint32_t fovbase = (uint32_t)MEM_ReadInt(TS3_fovbase);
 	if(!playerbase || !fovbase) // if playerbase or fovbase are invalid

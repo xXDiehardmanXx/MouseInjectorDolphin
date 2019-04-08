@@ -23,6 +23,10 @@
 #include "../mouse.h"
 #include "game.h"
 
+#define MAPMAKERXMIN 0x00400000 // mapmaker cursor limits
+#define MAPMAKERYMIN 0x00200000
+#define MAPMAKERXMAX 0x02400000
+#define MAPMAKERYMAX 0x01980000
 // TS2 ADDRESSES - OFFSET ADDRESSES BELOW (REQUIRES PLAYERBASE TO USE)
 #define TS2_camx 0x815891E8 - 0x815890A0
 #define TS2_camy 0x815891EC - 0x815890A0
@@ -32,6 +36,8 @@
 #define TS2_playerbase 0x804686CC // playable character pointer
 #define TS2_fov 0x8046818C
 #define TS2_yaxislimit 0x804686BC
+#define TS2_mapmakerx 0x803E5DF0
+#define TS2_mapmakery 0x803E5DF4
 
 static uint8_t TS2_Status(void);
 static void TS2_Inject(void);
@@ -66,6 +72,15 @@ static void TS2_Inject(void)
 		MEM_WriteFloat(TS2_yaxislimit, 80.f);
 	if(xmouse == 0 && ymouse == 0) // if mouse is idle
 		return;
+	int cursorx = MEM_ReadInt(TS2_mapmakerx), cursory = MEM_ReadInt(TS2_mapmakery);
+	if(cursorx >= MAPMAKERXMIN && cursorx <= MAPMAKERXMAX && cursory >= MAPMAKERYMIN && cursory <= MAPMAKERYMAX) // if in mapmaker mode
+	{
+		cursorx += (int)(xmouse * 0xFFFF * ((float)sensitivity / 40.f)); // calculate mapmaker cursor movement
+		cursory += (int)(ymouse * 0xFFFF * ((float)sensitivity / 40.f));
+		MEM_WriteInt(TS2_mapmakerx, ClampInt(cursorx, MAPMAKERXMIN, MAPMAKERXMAX));
+		MEM_WriteInt(TS2_mapmakery, ClampInt(cursory, MAPMAKERYMIN, MAPMAKERYMAX));
+		return;
+	}
 	const uint32_t playerbase = (uint32_t)MEM_ReadInt(TS2_playerbase);
 	if(!playerbase) // if playerbase is invalid
 		return;
