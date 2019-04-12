@@ -67,7 +67,7 @@ static void MOHF_Inject(void)
 	const uint32_t playerbase = (uint32_t)MEM_ReadInt(MOHF_playerbase);
 	if(NOTWITHINMEMRANGE(playerbase)) // if playerbase is invalid
 		return;
-	const int sentryflag = MEM_ReadInt(playerbase + MOHF_sentryflag);
+	const int32_t sentryflag = MEM_ReadInt(playerbase + MOHF_sentryflag);
 	const float fov = MEM_ReadFloat(playerbase + MOHF_fov);
 	if(sentryflag == 1) // if not using sentry
 	{

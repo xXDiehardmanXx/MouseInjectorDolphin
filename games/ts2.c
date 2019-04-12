@@ -72,7 +72,7 @@ static void TS2_Inject(void)
 		MEM_WriteFloat(TS2_yaxislimit, 80.f);
 	if(xmouse == 0 && ymouse == 0) // if mouse is idle
 		return;
-	int cursorx = MEM_ReadInt(TS2_mapmakerx), cursory = MEM_ReadInt(TS2_mapmakery);
+	int32_t cursorx = MEM_ReadInt(TS2_mapmakerx), cursory = MEM_ReadInt(TS2_mapmakery);
 	if(cursorx >= MAPMAKERXMIN && cursorx <= MAPMAKERXMAX && cursory >= MAPMAKERYMIN && cursory <= MAPMAKERYMAX) // if in mapmaker mode
 	{
 		cursorx += (int)(xmouse * 0xFFFF * ((float)sensitivity / 40.f)); // calculate mapmaker cursor movement
