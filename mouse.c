@@ -30,6 +30,7 @@ static unsigned char lockmousecounter = 0; // limit SetCursorPos execution
 
 uint8_t MOUSE_Init(void);
 void MOUSE_Quit(void);
+void MOUSE_Lock(void);
 void MOUSE_Update(void);
 
 //==========================================================================
@@ -60,7 +61,7 @@ void MOUSE_Lock(void)
 void MOUSE_Update(void)
 {
 	if(lockmousecounter % 25 == 0) // don't execute every tick
-		SetCursorPos(mouselock.x, mouselock.y); // set mouse position back to center of screen
+		SetCursorPos(mouselock.x, mouselock.y); // set mouse position back to lock position
 	lockmousecounter++; // overflow pseudo-counter
 	xmouse = ymouse = 0; // reset mouse input
 	while(ManyMouse_PollEvent(&event))
