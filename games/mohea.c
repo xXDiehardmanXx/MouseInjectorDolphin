@@ -51,7 +51,7 @@ const GAMEDRIVER *GAME_MOHEA = &GAMEDRIVER_INTERFACE;
 //==========================================================================
 static uint8_t MOHEA_Status(void)
 {
-	return (MEM_ReadInt(0x80000000) == 0x474F4E45 && MEM_ReadInt(0x80000004) == 0x36390000); // check game header to see if it matches MOHEA
+	return (MEM_ReadUInt(0x80000000) == 0x474F4E45U && MEM_ReadUInt(0x80000004) == 0x36390000U); // check game header to see if it matches MOHEA
 }
 //==========================================================================
 // Purpose: calculate mouse look and inject into current game
@@ -60,17 +60,18 @@ static void MOHEA_Inject(void)
 {
 	if(xmouse == 0 && ymouse == 0) // if mouse is idle
 		return;
-	const uint32_t playerbase = (uint32_t)MEM_ReadInt(MOHEA_playerbase);
+	const uint32_t playerbase = MEM_ReadUInt(MOHEA_playerbase);
 	if(NOTWITHINMEMRANGE(playerbase)) // if playerbase is invalid
 		return;
 	const float fov = MEM_ReadFloat(playerbase + MOHEA_fov);
 	const float health = MEM_ReadFloat(playerbase + MOHEA_health);
 	float camx = MEM_ReadFloat(playerbase + MOHEA_camx);
 	float camy = MEM_ReadFloat(playerbase + MOHEA_camy);
+	const float looksensitivity = (float)sensitivity / 40.f;
 	if(camx >= -TAU && camx <= TAU && camy >= -CROSSHAIRY && camy <= CROSSHAIRY && health > 0)
 	{
-		camx -= (float)xmouse / 10.f * ((float)sensitivity / 40.f) / (360.f / TAU) / (35.f / fov); // normal calculation method for X
-		camy += (float)(!invertpitch ? -ymouse : ymouse) / 10.f * ((float)sensitivity / 40.f) / (90.f / CROSSHAIRY) / (35.f / fov); // normal calculation method for Y
+		camx -= (float)xmouse / 10.f * looksensitivity / (360.f / TAU) / (35.f / fov); // normal calculation method for X
+		camy += (float)(!invertpitch ? -ymouse : ymouse) / 10.f * looksensitivity / (90.f / CROSSHAIRY) / (35.f / fov); // normal calculation method for Y
 		if(camx <= -TAU)
 			camx += TAU;
 		else if(camx >= TAU)

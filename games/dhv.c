@@ -51,17 +51,17 @@ static const GAMEDRIVER GAMEDRIVER_INTERFACE =
 	DHV_Inject
 };
 
+const GAMEDRIVER *GAME_DHV = &GAMEDRIVER_INTERFACE;
+
 static uint32_t playerbase = 0;
 static uint32_t fovbase = 0;
-
-const GAMEDRIVER *GAME_DHV = &GAMEDRIVER_INTERFACE;
 
 //==========================================================================
 // Purpose: return 1 if game is detected
 //==========================================================================
 static uint8_t DHV_Status(void)
 {
-	return (MEM_ReadInt(0x80000000) == 0x47444945 && MEM_ReadInt(0x80000004) == 0x37440000); // check game header to see if it matches DHV
+	return (MEM_ReadUInt(0x80000000) == 0x47444945U && MEM_ReadUInt(0x80000004) == 0x37440000U); // check game header to see if it matches DHV
 }
 //==========================================================================
 // Purpose: detects player pointer from stack address
@@ -69,18 +69,18 @@ static uint8_t DHV_Status(void)
 //==========================================================================
 static uint8_t DHV_DetectPlayer(void)
 {
-	const uint32_t tempfovbase = MEM_ReadInt(DHV_fovbase);
-	const uint32_t tempfov = MEM_ReadInt(tempfovbase + DHV_fov);
-	if(WITHINMEMRANGE(tempfovbase) && tempfov >= 0x3D8F5C29 && tempfov <= 0x3F99999A)
+	const uint32_t tempfovbase = MEM_ReadUInt(DHV_fovbase);
+	const uint32_t tempfov = MEM_ReadUInt(tempfovbase + DHV_fov);
+	if(WITHINMEMRANGE(tempfovbase) && tempfov >= 0x3D8F5C29U && tempfov <= 0x3F99999AU)
 		fovbase = tempfovbase;
-	const uint32_t tempplayerbase = MEM_ReadInt(DHV_playerbase);
-	const uint32_t tempcamx = MEM_ReadInt(tempplayerbase + DHV_camx);
-	const uint32_t tempcamy = MEM_ReadInt(tempplayerbase + DHV_camy);
-	const uint32_t tempcrosshairx = MEM_ReadInt(tempplayerbase + DHV_crosshairx);
-	const uint32_t tempcrosshairy = MEM_ReadInt(tempplayerbase + DHV_crosshairy);
-	const uint32_t temphealth = MEM_ReadInt(tempplayerbase + DHV_health);
-	const uint32_t tempheight = MEM_ReadInt(tempplayerbase + DHV_height);
-	if(WITHINMEMRANGE(tempplayerbase) && tempcamx < 0x40C90FDB && tempcamy == 0 && tempcrosshairx == 0 && tempcrosshairy == 0 && temphealth > 0 && temphealth <= 0x3F800000 && tempheight == 0x40400000) // test for valid player pointer
+	const uint32_t tempplayerbase = MEM_ReadUInt(DHV_playerbase);
+	const uint32_t tempcamx = MEM_ReadUInt(tempplayerbase + DHV_camx);
+	const uint32_t tempcamy = MEM_ReadUInt(tempplayerbase + DHV_camy);
+	const uint32_t tempcrosshairx = MEM_ReadUInt(tempplayerbase + DHV_crosshairx);
+	const uint32_t tempcrosshairy = MEM_ReadUInt(tempplayerbase + DHV_crosshairy);
+	const uint32_t temphealth = MEM_ReadUInt(tempplayerbase + DHV_health);
+	const uint32_t tempheight = MEM_ReadUInt(tempplayerbase + DHV_height);
+	if(WITHINMEMRANGE(tempplayerbase) && tempcamx < 0x40C90FDBU && tempcamy == 0 && tempcrosshairx == 0 && tempcrosshairy == 0 && temphealth > 0 && temphealth <= 0x3F800000U && tempheight == 0x40400000U) // test for valid player pointer
 	{
 		playerbase = tempplayerbase;
 		return 1;
@@ -100,10 +100,12 @@ static void DHV_Inject(void)
 	float camy = MEM_ReadFloat(playerbase + DHV_camy);
 	const float fov = MEM_ReadFloat(fovbase + DHV_fov);
 	const float health = MEM_ReadFloat(playerbase + DHV_health);
+	const float looksensitivity = (float)sensitivity / 40.f;
+	const float crosshairsensitivity = ((float)crosshair / 100.f) * looksensitivity;
 	if(camx >= 0 && camx < TAU && health > 0 && fov > 0 && fov <= 1.2f)
 	{
-		camx -= (float)xmouse / 10.f * ((float)sensitivity / 40.f) / (360.f / TAU) / (1.2f / fov); // normal calculation method for X
-		camy += (float)(invertpitch ? ymouse : -ymouse) / 10.f * ((float)sensitivity / 40.f) / (360.f / TAU) / (1.2f / fov); // normal calculation method for Y
+		camx -= (float)xmouse / 10.f * looksensitivity / (360.f / TAU) / (1.2f / fov); // normal calculation method for X
+		camy += (float)(invertpitch ? ymouse : -ymouse) / 10.f * looksensitivity / (360.f / TAU) / (1.2f / fov); // normal calculation method for Y
 		if(camx >= TAU)
 			camx -= TAU;
 		camy = ClampFloat(camy, CAMYMINUS, CAMYPLUS);
@@ -113,8 +115,8 @@ static void DHV_Inject(void)
 		{
 			float crosshairx = MEM_ReadFloat(playerbase + DHV_crosshairx); // after camera x and y have been calculated and injected, calculate the crosshair/gun sway
 			float crosshairy = MEM_ReadFloat(playerbase + DHV_crosshairy);
-			crosshairx -= ((float)xmouse / 80.f) * ((float)crosshair / 80.f) / (1.2f / fov);
-			crosshairy -= ((float)(!invertpitch ? ymouse : -ymouse) / 80.f) * ((float)crosshair / 80.f) / (1.2f / fov);
+			crosshairx -= (float)xmouse / 80.f * crosshairsensitivity / (1.2f / fov);
+			crosshairy -= (float)(!invertpitch ? ymouse : -ymouse) / 80.f * crosshairsensitivity / (1.2f / fov);
 			MEM_WriteFloat(playerbase + DHV_crosshairx, ClampFloat(crosshairx, -CROSSHAIRX, CROSSHAIRX));
 			MEM_WriteFloat(playerbase + DHV_crosshairy, ClampFloat(crosshairy, -CROSSHAIRY, CROSSHAIRY));
 		}

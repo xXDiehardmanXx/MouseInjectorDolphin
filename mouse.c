@@ -37,7 +37,7 @@ void MOUSE_Update(void);
 //==========================================================================
 uint8_t MOUSE_Init(void)
 {
-	return ManyMouse_Init();
+	return (ManyMouse_Init() > 0);
 }
 //==========================================================================
 // Purpose: safely quit manymouse

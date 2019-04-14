@@ -60,7 +60,7 @@ const GAMEDRIVER *GAME_TS3 = &GAMEDRIVER_INTERFACE;
 //==========================================================================
 static uint8_t TS3_Status(void)
 {
-	return (MEM_ReadInt(0x80000000) == 0x47334645 && MEM_ReadInt(0x80000004) == 0x36390000); // check game header to see if it matches TS3
+	return (MEM_ReadUInt(0x80000000) == 0x47334645U && MEM_ReadUInt(0x80000004) == 0x36390000U); // check game header to see if it matches TS3
 }
 //==========================================================================
 // Purpose: calculate mouse look and inject into current game
@@ -71,16 +71,18 @@ static void TS3_Inject(void)
 		return;
 	if(MEM_ReadInt(TS3_yaxislimit) != 0x42A00000) // overwrite y axis limit from 60 degrees (SP) or 75 degrees (MP)
 		MEM_WriteFloat(TS3_yaxislimit, 80.f);
+	const float looksensitivity = (float)sensitivity / 40.f;
+	const float crosshairsensitivity = ((float)crosshair / 100.f) * looksensitivity;
 	float cursorx = MEM_ReadFloat(TS3_mapmakerx), cursory = MEM_ReadFloat(TS3_mapmakery);
 	if(cursorx >= MAPMAKERXMIN && cursorx <= MAPMAKERXMAX && cursory >= MAPMAKERYMIN && cursory <= MAPMAKERYMAX) // if mapmaker cursor is safe to inject
 	{
-		cursorx += (float)xmouse / 7.5f * ((float)sensitivity / 40.f); // calculate mapmaker cursor movement
-		cursory += (float)ymouse / 7.5f * ((float)sensitivity / 40.f);
+		cursorx += (float)xmouse / 7.5f * looksensitivity; // calculate mapmaker cursor movement
+		cursory += (float)ymouse / 7.5f * looksensitivity;
 		MEM_WriteFloat(TS3_mapmakerx, ClampFloat(cursorx, MAPMAKERXMIN, MAPMAKERXMAX));
 		MEM_WriteFloat(TS3_mapmakery, ClampFloat(cursory, MAPMAKERYMIN, MAPMAKERYMAX));
 	}
-	const uint32_t playerbase = (uint32_t)MEM_ReadInt(TS3_playerbase);
-	const uint32_t fovbase = (uint32_t)MEM_ReadInt(TS3_fovbase);
+	const uint32_t playerbase = MEM_ReadUInt(TS3_playerbase);
+	const uint32_t fovbase = MEM_ReadUInt(TS3_fovbase);
 	if(!playerbase || !fovbase) // if playerbase or fovbase are invalid
 		return;
 	float camx = MEM_ReadFloat(playerbase + TS3_camx);
@@ -89,8 +91,8 @@ static void TS3_Inject(void)
 	const float yaxislimit = MEM_ReadFloat(TS3_yaxislimit);
 	if(/*camx >= 0 && camx < 360 &&*/camy >= -yaxislimit && camy <= yaxislimit && fov <= 55 && fov > 3)
 	{
-		camx -= (float)xmouse / 10.f * ((float)sensitivity / 40.f) * (fov / 55.f); // normal calculation method for X
-		camy += (float)(!invertpitch ? -ymouse : ymouse) / 10.f * ((float)sensitivity / 40.f) * (fov / 55.f); // normal calculation method for Y
+		camx -= (float)xmouse / 10.f * looksensitivity * (fov / 55.f); // normal calculation method for X
+		camy += (float)(!invertpitch ? -ymouse : ymouse) / 10.f * looksensitivity * (fov / 55.f); // normal calculation method for Y
 		/*if(camx < 0)
 			camx += 360;
 		else if(camx >= 360)
@@ -101,13 +103,13 @@ static void TS3_Inject(void)
 		if(crosshair && MEM_ReadInt(TS3_crosshairsetting) <= 1) // if crosshair sway is enabled and turned on in-game
 		{
 			float crosshairx = MEM_ReadFloat(playerbase + TS3_crosshairx), gunx = MEM_ReadFloat(playerbase + TS3_gunx); // after camera x and y have been calculated and injected, calculate the crosshair/gun sway
-			crosshairx += ((float)xmouse / 80.f) * ((float)crosshair / 80.f) * (fov / 55.f);
-			gunx += ((float)xmouse / 80.f) * ((float)crosshair / 80.f) * (fov / 55.f) / 1.5f;
+			crosshairx += (float)xmouse / 80.f * crosshairsensitivity * (fov / 55.f);
+			gunx += (float)xmouse / 80.f * crosshairsensitivity * (fov / 55.f) / 1.5f;
 			MEM_WriteFloat(playerbase + TS3_crosshairx, ClampFloat(crosshairx, -1.f, 1.f));
 			MEM_WriteFloat(playerbase + TS3_gunx, ClampFloat(gunx, -1.f, 1.f));
 			float crosshairy = MEM_ReadFloat(playerbase + TS3_crosshairy), guny = MEM_ReadFloat(playerbase + TS3_guny);
-			crosshairy += ((float)(!invertpitch ? ymouse : -ymouse) / 80.f) * ((float)crosshair / 80.f) * (fov / 55.f);
-			guny += ((float)(!invertpitch ? ymouse : -ymouse) / 80.f) * ((float)crosshair / 80.f) * (fov / 55.f) / 1.5f;
+			crosshairy += (float)(!invertpitch ? ymouse : -ymouse) / 80.f * crosshairsensitivity * (fov / 55.f);
+			guny += (float)(!invertpitch ? ymouse : -ymouse) / 80.f * crosshairsensitivity * (fov / 55.f) / 1.5f;
 			MEM_WriteFloat(playerbase + TS3_crosshairy, ClampFloat(crosshairy, -1.f, 1.f));
 			MEM_WriteFloat(playerbase + TS3_guny, ClampFloat(guny, -1.f, 1.f));
 		}

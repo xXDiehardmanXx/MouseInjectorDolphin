@@ -55,7 +55,7 @@ const GAMEDRIVER *GAME_MOHF = &GAMEDRIVER_INTERFACE;
 //==========================================================================
 static uint8_t MOHF_Status(void)
 {
-	return (MEM_ReadInt(0x80000000) == 0x474D4645 && MEM_ReadInt(0x80000004) == 0x36390000); // check game header to see if it matches MOHF
+	return (MEM_ReadUInt(0x80000000) == 0x474D4645U && MEM_ReadUInt(0x80000004) == 0x36390000U); // check game header to see if it matches MOHF
 }
 //==========================================================================
 // Purpose: calculate mouse look and inject into current game
@@ -64,19 +64,20 @@ static void MOHF_Inject(void)
 {
 	if(xmouse == 0 && ymouse == 0) // if mouse is idle
 		return;
-	const uint32_t playerbase = (uint32_t)MEM_ReadInt(MOHF_playerbase);
+	const uint32_t playerbase = MEM_ReadUInt(MOHF_playerbase);
 	if(NOTWITHINMEMRANGE(playerbase)) // if playerbase is invalid
 		return;
 	const int32_t sentryflag = MEM_ReadInt(playerbase + MOHF_sentryflag);
 	const float fov = MEM_ReadFloat(playerbase + MOHF_fov);
+	const float looksensitivity = (float)sensitivity / 40.f;
 	if(sentryflag == 1) // if not using sentry
 	{
 		float camx = MEM_ReadFloat(playerbase + MOHF_camx);
 		float camy = MEM_ReadFloat(playerbase + MOHF_camy);
 		if(camx >= -TAU && camx <= TAU && camy >= -CROSSHAIRY && camy <= CROSSHAIRY)
 		{
-			camx -= (float)xmouse / 10.f * ((float)sensitivity / 40.f) / (360.f / TAU) / (35.f / fov); // normal calculation method for X
-			camy += (float)(invertpitch ? -ymouse : ymouse) / 10.f * ((float)sensitivity / 40.f) / (90.f / CROSSHAIRY) / (35.f / fov); // normal calculation method for Y
+			camx -= (float)xmouse / 10.f * looksensitivity / (360.f / TAU) / (35.f / fov); // normal calculation method for X
+			camy += (float)(invertpitch ? -ymouse : ymouse) / 10.f * looksensitivity / (90.f / CROSSHAIRY) / (35.f / fov); // normal calculation method for Y
 			if(camx <= -TAU)
 				camx += TAU;
 			else if(camx >= TAU)
@@ -93,8 +94,8 @@ static void MOHF_Inject(void)
 		const float sentryylimit = MEM_ReadFloat(playerbase + MOHF_sentryylimit);
 		if(sentryx >= -TAU && sentryx <= TAU && sentryy >= -sentryylimit && sentryy <= sentryylimit)
 		{
-			sentryx -= (float)xmouse / 10.f * ((float)sensitivity / 40.f) / (360.f / TAU) / (35.f / fov); // normal calculation method for X
-			sentryy += (float)(invertpitch ? -ymouse : ymouse) / 10.f * ((float)sensitivity / 40.f) / (90.f / CROSSHAIRY) / (35.f / fov); // normal calculation method for Y
+			sentryx -= (float)xmouse / 10.f * looksensitivity / (360.f / TAU) / (35.f / fov); // normal calculation method for X
+			sentryy += (float)(invertpitch ? -ymouse : ymouse) / 10.f * looksensitivity / (90.f / CROSSHAIRY) / (35.f / fov); // normal calculation method for Y
 			if(sentryx < -TAU)
 				sentryx += TAU;
 			else if(sentryx >= TAU)

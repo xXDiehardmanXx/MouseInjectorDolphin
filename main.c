@@ -25,7 +25,7 @@
 #include "mouse.h"
 #include "./games/game.h"
 
-enum EDITINGCURRENT {EDITINGSENSITIVITY, EDITINGCROSSHAIR};
+enum EDITINGCURRENT {EDITINGSENSITIVITY = 0, EDITINGCROSSHAIR};
 
 static uint8_t mousetoggle = 0;
 static uint8_t selectedoption = EDITINGSENSITIVITY;

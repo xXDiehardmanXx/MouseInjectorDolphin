@@ -75,5 +75,7 @@ void GAME_Inject(void)
 //==========================================================================
 const char *GAME_Name(void)
 {
-	return CURRENT_GAME != NULL ? CURRENT_GAME->Name : NULL;
+	if(CURRENT_GAME != NULL)
+		return CURRENT_GAME->Name;
+	return NULL;
 }

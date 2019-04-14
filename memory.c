@@ -32,8 +32,10 @@ uint8_t MEM_Init(void);
 void MEM_Quit(void);
 void MEM_UpdateEmuoffset(void);
 int32_t MEM_ReadInt(const uint32_t addr);
+uint32_t MEM_ReadUInt(const uint32_t addr);
 float MEM_ReadFloat(const uint32_t addr);
-void MEM_WriteInt(const uint32_t addr, uint32_t value);
+void MEM_WriteInt(const uint32_t addr, int32_t value);
+void MEM_WriteUInt(const uint32_t addr, uint32_t value);
 void MEM_WriteFloat(const uint32_t addr, float value);
 
 //==========================================================================
@@ -109,6 +111,19 @@ int32_t MEM_ReadInt(const uint32_t addr)
 	return output;
 }
 //==========================================================================
+// Purpose: read unsigned int from memory
+// Parameter: address location
+//==========================================================================
+uint32_t MEM_ReadUInt(const uint32_t addr)
+{
+	if(!emuoffset || NOTWITHINMEMRANGE(addr)) // if gamecube memory has not been init by dolphin or reading from outside of memory range
+		return 0;
+	uint32_t output; // temp var used for output of function
+	ReadProcessMemory(emuhandle, (LPVOID)(emuoffset + (addr - 0x80000000)), &output, sizeof(output), NULL);
+	__asm__("bswapl %0" : "=r" (output) : "0" (output)); // byteswap in assembly
+	return output;
+}
+//==========================================================================
 // Purpose: read float from memory
 // Parameter: address location
 //==========================================================================
@@ -125,7 +140,18 @@ float MEM_ReadFloat(const uint32_t addr)
 // Purpose: write int to memory
 // Parameter: address location and value
 //==========================================================================
-void MEM_WriteInt(const uint32_t addr, uint32_t value)
+void MEM_WriteInt(const uint32_t addr, int32_t value)
+{
+	if(!emuoffset || NOTWITHINMEMRANGE(addr)) // if gamecube memory has not been init by dolphin or writing to outside of memory range
+		return;
+	__asm__("bswapl %0" : "=r" (value) : "0" (value)); // byteswap in assembly
+	WriteProcessMemory(emuhandle, (LPVOID)(emuoffset + (addr - 0x80000000)), &value, sizeof(value), NULL);
+}
+//==========================================================================
+// Purpose: write unsigned int to memory
+// Parameter: address location and value
+//==========================================================================
+void MEM_WriteUInt(const uint32_t addr, uint32_t value)
 {
 	if(!emuoffset || NOTWITHINMEMRANGE(addr)) // if gamecube memory has not been init by dolphin or writing to outside of memory range
 		return;

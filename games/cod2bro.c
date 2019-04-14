@@ -44,17 +44,17 @@ static const GAMEDRIVER GAMEDRIVER_INTERFACE =
 	COD2BRO_Inject
 };
 
+const GAMEDRIVER *GAME_COD2BRO = &GAMEDRIVER_INTERFACE;
+
 static uint32_t playerbase = 0;
 static uint8_t vehiclemode = 0;
-
-const GAMEDRIVER *GAME_COD2BRO = &GAMEDRIVER_INTERFACE;
 
 //==========================================================================
 // Purpose: return 1 if game is detected
 //==========================================================================
 static uint8_t COD2BRO_Status(void)
 {
-	return (MEM_ReadInt(0x80000000) == 0x47514345 && MEM_ReadInt(0x80000004) == 0x35320000); // check game header to see if it matches COD2BRO
+	return (MEM_ReadUInt(0x80000000) == 0x47514345U && MEM_ReadUInt(0x80000004) == 0x35320000U); // check game header to see if it matches COD2BRO
 }
 //==========================================================================
 // Purpose: detects player pointer and interface type
@@ -62,14 +62,14 @@ static uint8_t COD2BRO_Status(void)
 //==========================================================================
 static void COD2BRO_DetectInterface(void)
 {
-	const uint32_t tempplayerbase = ((uint32_t)MEM_ReadInt(COD2BRO_playerbase)) + 0x80000000; // offset playerbase to RAM range
+	const uint32_t tempplayerbase = MEM_ReadUInt(COD2BRO_playerbase) + 0x80000000U; // offset playerbase to RAM range
 	if(NOTWITHINMEMRANGE(tempplayerbase)) // if in menu or map unloaded, reset playerbase and return
 	{
 		playerbase = 0;
 		return;
 	}
-	const uint32_t footfov = MEM_ReadInt(tempplayerbase + COD2BRO_footfov);
-	const uint32_t vehiclefov = MEM_ReadInt(tempplayerbase + COD2BRO_vehiclefov);
+	const uint32_t footfov = MEM_ReadUInt(tempplayerbase + COD2BRO_footfov);
+	const uint32_t vehiclefov = MEM_ReadUInt(tempplayerbase + COD2BRO_vehiclefov);
 	if(playerbase == tempplayerbase || footfov == vehiclefov) // if same map or map hasn't loaded, return
 		return;
 	playerbase = tempplayerbase;
@@ -98,13 +98,14 @@ static void COD2BRO_Inject(void)
 		camxaddress = playerbase + COD2BRO_vehiclecamx;
 		camyaddress = playerbase + COD2BRO_vehiclecamy;
 	}
+	const float looksensitivity = (float)sensitivity / 40.f;
 	const float fov = MEM_ReadFloat(fovaddress);
 	float camx = MEM_ReadFloat(camxaddress);
 	float camy = MEM_ReadFloat(camyaddress);
 	if(!vehiclemode && fov > 0 && fov <= 1.25f || vehiclemode && fov <= 2.f) // if fov is valid
 	{
-		camx -= (float)xmouse / 10.f * ((float)sensitivity / 40.f) * (fov / 1.f); // normal calculation method for X
-		camy += (float)(invertpitch ? -ymouse : ymouse) / 10.f * ((float)sensitivity / 40.f) * (fov / 1.f); // normal calculation method for Y
+		camx -= (float)xmouse / 10.f * looksensitivity * (fov / 1.f); // normal calculation method for X
+		camy += (float)(invertpitch ? -ymouse : ymouse) / 10.f * looksensitivity * (fov / 1.f); // normal calculation method for Y
 		if(camx < -360)
 			camx += 360;
 		else if(camx >= 360)

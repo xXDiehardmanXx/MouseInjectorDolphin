@@ -63,7 +63,7 @@ const GAMEDRIVER *GAME_NF = &GAMEDRIVER_INTERFACE;
 //==========================================================================
 static uint8_t NF_Status(void)
 {
-	return (MEM_ReadInt(0x80000000) == 0x474F3745 && MEM_ReadInt(0x80000004) == 0x36390000); // check game header to see if it matches NF
+	return (MEM_ReadUInt(0x80000000) == 0x474F3745U && MEM_ReadUInt(0x80000004) == 0x36390000U); // check game header to see if it matches NF
 }
 //==========================================================================
 // Purpose: calculate mouse look and inject into current game
@@ -72,7 +72,9 @@ static void NF_Inject(void)
 {
 	if(xmouse == 0 && ymouse == 0) // if mouse is idle
 		return;
-	const uint32_t playerbase = (uint32_t)MEM_ReadInt(NF_playerbase);
+	const uint32_t playerbase = MEM_ReadUInt(NF_playerbase);
+	const float looksensitivity = (float)sensitivity / 40.f;
+	const float crosshairsensitivity = ((float)crosshair / 100.f) * looksensitivity;
 	if(WITHINMEMRANGE(playerbase)) // if playerbase is valid
 	{
 		if(MEM_ReadInt(playerbase + NF_lookspring) == 0x03010002) // disable lookspring when spawned
@@ -81,11 +83,11 @@ static void NF_Inject(void)
 		float camy = MEM_ReadFloat(playerbase + NF_camy);
 		const float fov = MEM_ReadFloat(playerbase + NF_fov);
 		const float hp = MEM_ReadFloat(playerbase + NF_health);
-		const uint32_t pauseflag = MEM_ReadInt(NF_pauseflag);
+		const uint32_t pauseflag = MEM_ReadUInt(NF_pauseflag);
 		if(camx >= -PI && camx <= PI && camy >= -1.f && camy <= 1.f && fov >= 1.f && hp > 0 && !pauseflag)
 		{
-			camx -= (float)xmouse / 10.f * ((float)sensitivity / 40.f) / (360.f / TAU) / (fov / 1.f); // normal calculation method for X
-			camy += (float)(!invertpitch ? -ymouse : ymouse) / 10.f * ((float)sensitivity / 40.f) / 90.f / (fov / 1.f); // normal calculation method for Y
+			camx -= (float)xmouse / 10.f * looksensitivity / (360.f / TAU) / (fov / 1.f); // normal calculation method for X
+			camy += (float)(!invertpitch ? -ymouse : ymouse) / 10.f * looksensitivity / 90.f / (fov / 1.f); // normal calculation method for Y
 			if(camx <= -PI)
 				camx += TAU;
 			else if(camx >= PI)
@@ -97,8 +99,8 @@ static void NF_Inject(void)
 			{
 				float crosshairx = MEM_ReadFloat(playerbase + NF_crosshairx); // after camera x and y have been calculated and injected, calculate the crosshair/gun sway
 				float crosshairy = MEM_ReadFloat(playerbase + NF_crosshairy);
-				crosshairx += ((float)xmouse / 80.f) * ((float)crosshair / 80.f) / (fov / 1.f);
-				crosshairy += ((float)(!invertpitch ? -ymouse : ymouse) / 80.f) * ((float)crosshair / 80.f) / (fov / 1.f);
+				crosshairx += (float)xmouse / 80.f * crosshairsensitivity / (fov / 1.f);
+				crosshairy += (float)(!invertpitch ? -ymouse : ymouse) / 80.f * crosshairsensitivity / (fov / 1.f);
 				MEM_WriteFloat(playerbase + NF_crosshairx, ClampFloat(crosshairx, -CROSSHAIRX, CROSSHAIRX));
 				MEM_WriteFloat(playerbase + NF_crosshairy, ClampFloat(crosshairy, -CROSSHAIRY, CROSSHAIRY));
 			}
@@ -106,7 +108,7 @@ static void NF_Inject(void)
 	}
 	else // if playerbase is invalid, check for sentry mode
 	{
-		const uint32_t sentrybase = (uint32_t)MEM_ReadInt(NF_sentrybase);
+		const uint32_t sentrybase = MEM_ReadUInt(NF_sentrybase);
 		if(NOTWITHINMEMRANGE(sentrybase)) // if sentrybase is invalid
 			return;
 		float sentryx = MEM_ReadFloat(sentrybase + NF_sentryx);
@@ -114,8 +116,8 @@ static void NF_Inject(void)
 		const float fov = MEM_ReadFloat(NF_sentryfov);
 		if(sentryx >= -1.f && sentryx <= 1.f)
 		{
-			sentryx += (float)xmouse / 10.f * ((float)sensitivity / 40.f) / 360.f / (SENTRYFOVBASE / fov);
-			sentryy += (float)(!invertpitch ? ymouse : -ymouse) / 10.f * ((float)sensitivity / 40.f) / (90.f / (SENTRYMAXY - SENTRYMINY)) / (SENTRYFOVBASE / fov);
+			sentryx += (float)xmouse / 10.f * looksensitivity / 360.f / (SENTRYFOVBASE / fov);
+			sentryy += (float)(!invertpitch ? ymouse : -ymouse) / 10.f * looksensitivity / (90.f / (SENTRYMAXY - SENTRYMINY)) / (SENTRYFOVBASE / fov);
 			if(sentryx <= -1.f)
 				sentryx += 1.f;
 			else if(sentryx >= 1.f)

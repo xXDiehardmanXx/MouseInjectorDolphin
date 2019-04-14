@@ -56,32 +56,34 @@ const GAMEDRIVER *GAME_TS2 = &GAMEDRIVER_INTERFACE;
 //==========================================================================
 static uint8_t TS2_Status(void)
 {
-	return (MEM_ReadInt(0x80000000) == 0x47545345 && MEM_ReadInt(0x80000004) == 0x34460000); // check game header to see if it matches TS2
+	return (MEM_ReadUInt(0x80000000) == 0x47545345U && MEM_ReadUInt(0x80000004) == 0x34460000U); // check game header to see if it matches TS2
 }
 //==========================================================================
 // Purpose: calculate mouse look and inject into current game
 //==========================================================================
 static void TS2_Inject(void)
 {
-	if(MEM_ReadInt(0x8046DF70) == 0x3F6AAAAB && MEM_ReadInt(0x8046CE94) == 0x3F6AAAAB) // force 16:9 hack
+	if(MEM_ReadUInt(0x8046DF70) == 0x3F6AAAABU && MEM_ReadUInt(0x8046CE94) == 0x3F6AAAABU) // force 16:9 hack
 	{
-		MEM_WriteInt(0x8046DF70, 0x3F9B4852);
-		MEM_WriteInt(0x8046CE94, 0x3F9B4852);
+		MEM_WriteUInt(0x8046DF70, 0x3F9B4852);
+		MEM_WriteUInt(0x8046CE94, 0x3F9B4852);
 	}
-	if(MEM_ReadInt(TS2_yaxislimit) != 0x42A00000) // overwrite y axis limit from 40 degrees (SP) or 50 degrees (MP)
+	if(MEM_ReadUInt(TS2_yaxislimit) != 0x42A00000U) // overwrite y axis limit from 40 degrees (SP) or 50 degrees (MP)
 		MEM_WriteFloat(TS2_yaxislimit, 80.f);
 	if(xmouse == 0 && ymouse == 0) // if mouse is idle
 		return;
+	const float looksensitivity = (float)sensitivity / 40.f;
+	const float crosshairsensitivity = ((float)crosshair / 100.f) * looksensitivity;
 	int32_t cursorx = MEM_ReadInt(TS2_mapmakerx), cursory = MEM_ReadInt(TS2_mapmakery);
 	if(cursorx >= MAPMAKERXMIN && cursorx <= MAPMAKERXMAX && cursory >= MAPMAKERYMIN && cursory <= MAPMAKERYMAX) // if in mapmaker mode
 	{
-		cursorx += (int)(xmouse * 0xFFFF * ((float)sensitivity / 40.f)); // calculate mapmaker cursor movement
-		cursory += (int)(ymouse * 0xFFFF * ((float)sensitivity / 40.f));
+		cursorx += (int)((float)xmouse * 65535.f * looksensitivity); // calculate mapmaker cursor movement
+		cursory += (int)((float)ymouse * 65535.f * looksensitivity);
 		MEM_WriteInt(TS2_mapmakerx, ClampInt(cursorx, MAPMAKERXMIN, MAPMAKERXMAX));
 		MEM_WriteInt(TS2_mapmakery, ClampInt(cursory, MAPMAKERYMIN, MAPMAKERYMAX));
 		return;
 	}
-	const uint32_t playerbase = (uint32_t)MEM_ReadInt(TS2_playerbase);
+	const uint32_t playerbase = MEM_ReadUInt(TS2_playerbase);
 	if(!playerbase) // if playerbase is invalid
 		return;
 	float camx = MEM_ReadFloat(playerbase + TS2_camx);
@@ -90,8 +92,8 @@ static void TS2_Inject(void)
 	const float yaxislimit = MEM_ReadFloat(TS2_yaxislimit);
 	if(camx >= 0 && camx < 360 && camy >= -yaxislimit && camy <= yaxislimit && fov > 3)
 	{
-		camx -= (float)xmouse / 10.f * ((float)sensitivity / 40.f) * (fov / 60.f); // normal calculation method for X
-		camy += (float)(!invertpitch ? -ymouse : ymouse) / 10.f * ((float)sensitivity / 40.f) * (fov / 60.f); // normal calculation method for Y
+		camx -= (float)xmouse / 10.f * looksensitivity * (fov / 60.f); // normal calculation method for X
+		camy += (float)(!invertpitch ? -ymouse : ymouse) / 10.f * looksensitivity * (fov / 60.f); // normal calculation method for Y
 		if(camx < 0)
 			camx += 360;
 		else if(camx >= 360)
@@ -103,8 +105,8 @@ static void TS2_Inject(void)
 		{
 			float crosshairx = MEM_ReadFloat(playerbase + TS2_crosshairx); // after camera x and y have been calculated and injected, calculate the crosshair/gun sway
 			float crosshairy = MEM_ReadFloat(playerbase + TS2_crosshairy);
-			crosshairx += ((float)xmouse / 80.f) * ((float)crosshair / 80.f) * (fov / 55.f);
-			crosshairy += ((float)(!invertpitch ? ymouse : -ymouse) / 80.f) * ((float)crosshair / 80.f) * (fov / 55.f);
+			crosshairx += (float)xmouse / 80.f * crosshairsensitivity * (fov / 55.f);
+			crosshairy += (float)(!invertpitch ? ymouse : -ymouse) / 80.f * crosshairsensitivity * (fov / 55.f);
 			MEM_WriteFloat(playerbase + TS2_crosshairx, ClampFloat(crosshairx, -1.f, 1.f));
 			MEM_WriteFloat(playerbase + TS2_crosshairy, ClampFloat(crosshairy, -1.f, 1.f));
 		}
