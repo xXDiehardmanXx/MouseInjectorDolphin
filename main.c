@@ -45,7 +45,7 @@ static void GUI_Update(void);
 static void GUI_ListGames(void);
 static void GUI_Clear(void);
 static void INI_Load(void);
-static void INI_Save(void);
+static void INI_Save(const uint8_t showerror);
 
 //==========================================================================
 // Purpose: run everything like a god damn speed demon
@@ -97,7 +97,7 @@ int32_t main(void)
 //==========================================================================
 static void quit(void)
 {
-	INI_Save();
+	INI_Save(0);
 	MOUSE_Quit();
 	MEM_Quit();
 }
@@ -289,19 +289,19 @@ static void INI_Load(void)
 		else
 		{
 			MessageBox(HWND_DESKTOP, "Loading mouseinjector.ini failed!\n\nUnknown values detected, loading default settings.", "Error", MB_ICONERROR | MB_OK); // tell the user loading mouseinjector.ini failed
-			INI_Save(); // overwrite mouseinjector.ini with valid settings
+			INI_Save(1); // overwrite mouseinjector.ini with valid settings
 		}
 	}
 	else // if loading file failed
 	{
 		MessageBox(HWND_DESKTOP, "Loading mouseinjector.ini failed!\n\nAttempting to create mouseinjector.ini file.", "Error", MB_ICONERROR | MB_OK); // tell the user loading mouseinjector.ini failed
-		INI_Save(); // create mouseinjector.ini
+		INI_Save(1); // create mouseinjector.ini
 	}
 }
 //==========================================================================
 // Purpose: saves current settings to mouseinjector.ini
 //==========================================================================
-static void INI_Save(void)
+static void INI_Save(const uint8_t showerror)
 {
 	FILE *fileptr; // create a file pointer and open mouseinjector.ini from same dir as our program
 	if((fileptr = fopen("mouseinjector.ini", "w")) != NULL) // if the INI exists
@@ -309,6 +309,6 @@ static void INI_Save(void)
 		fprintf(fileptr, "%u\n%u\n%u\n%u\n%u", sensitivity, crosshair, invertpitch, locksettings, welcomed); // write current settings to mouseinjector.ini
 		fclose(fileptr); // close the file stream
 	}
-	else // if saving file failed
+	else if(showerror) // if saving file failed
 		MessageBox(HWND_DESKTOP, "Saving mouseinjector.ini failed!", "Error", MB_ICONERROR | MB_OK); // tell the user saving mouseinjector.ini failed
 }
