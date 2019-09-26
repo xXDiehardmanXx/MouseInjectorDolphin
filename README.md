@@ -8,6 +8,9 @@ A external app that injects cursor input into game memory, bundled with Dolphin 
 #### This is an unfinished, alpha prototype. Game support is poor beyond mouselook hooks.
 I have no intentions of maintaining this software. Pull requests will be ignored.
 
+# How to Use
+Follow the quick start guide in the included readme.txt file
+
 # Supported Titles
 
 * TimeSplitters 2
