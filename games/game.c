@@ -19,6 +19,7 @@
 //==========================================================================
 #include <stdlib.h>
 #include <stdint.h>
+#include "../main.h"
 #include "game.h"
 
 extern const GAMEDRIVER *GAME_TS2;
@@ -28,6 +29,7 @@ extern const GAMEDRIVER *GAME_MOHF;
 extern const GAMEDRIVER *GAME_MOHEA;
 extern const GAMEDRIVER *GAME_DHV;
 extern const GAMEDRIVER *GAME_COD2BRO;
+extern const GAMEDRIVER *GAME_SERIOUS;
 
 static const GAMEDRIVER **GAMELIST[] =
 {
@@ -37,7 +39,8 @@ static const GAMEDRIVER **GAMELIST[] =
 	&GAME_MOHF,
 	&GAME_MOHEA,
 	&GAME_DHV,
-	&GAME_COD2BRO
+	&GAME_COD2BRO,
+	&GAME_SERIOUS
 };
 
 static const GAMEDRIVER *CURRENT_GAME = NULL;
@@ -77,5 +80,23 @@ const char *GAME_Name(void)
 {
 	if(CURRENT_GAME != NULL)
 		return CURRENT_GAME->Name;
-	return NULL;
+	return DOLPHINVERSION; // if no driver active, return dolphin name
+}
+//==========================================================================
+// Purpose: return game driver's required tickrate
+//==========================================================================
+uint16_t GAME_Tickrate(void)
+{
+	if(CURRENT_GAME != NULL)
+		return CURRENT_GAME->Tickrate;
+	return 1; // if no driver active, use 1000 Hz tickrate
+}
+//==========================================================================
+// Purpose: return game driver's crosshair sway support
+//==========================================================================
+uint8_t GAME_CrosshairSwaySupported(void)
+{
+	if(CURRENT_GAME != NULL)
+		return CURRENT_GAME->Crosshair;
+	return 1; // return 1 if no drivers are available, so user can edit crosshair sway while dolphin isn't playing a game
 }

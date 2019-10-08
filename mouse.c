@@ -31,7 +31,7 @@ static unsigned char lockmousecounter = 0; // limit SetCursorPos execution
 uint8_t MOUSE_Init(void);
 void MOUSE_Quit(void);
 void MOUSE_Lock(void);
-void MOUSE_Update(void);
+void MOUSE_Update(const uint16_t tickrate);
 
 //==========================================================================
 // Purpose: initialize manymouse and returns detected devices (0 = not found)
@@ -58,11 +58,16 @@ void MOUSE_Lock(void)
 // Purpose: update xmouse/ymouse with mouse input
 // Changed Globals: lockmousecounter, xmouse, ymouse, event
 //==========================================================================
-void MOUSE_Update(void)
+void MOUSE_Update(const uint16_t tickrate)
 {
-	if(lockmousecounter % 25 == 0) // don't execute every tick
+	if(tickrate > 8) // if game driver tickrate is over 8ms, do not bother limiting SetCursorPos calls
 		SetCursorPos(mouselock.x, mouselock.y); // set mouse position back to lock position
-	lockmousecounter++; // overflow pseudo-counter
+	else
+	{
+		if(lockmousecounter % 25 == 0) // don't execute every tick
+			SetCursorPos(mouselock.x, mouselock.y); // set mouse position back to lock position
+		lockmousecounter++; // overflow pseudo-counter
+	}
 	xmouse = ymouse = 0; // reset mouse input
 	while(ManyMouse_PollEvent(&event))
 	{

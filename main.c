@@ -79,7 +79,7 @@ int32_t main(void)
 		{
 			if(GAME_Status()) // if supported game has been detected
 			{
-				MOUSE_Update(); // update xmouse and ymouse vars so injection use latest mouse input
+				MOUSE_Update(GAME_Tickrate()); // update xmouse and ymouse vars so injection use latest mouse input
 				GAME_Inject(); // inject mouselook to game
 			}
 			else // dolphin has no game loaded or game not found, wait 100 ms and try again
@@ -88,7 +88,7 @@ int32_t main(void)
 				Sleep(100);
 			}
 		}
-		Sleep(TICKRATE);
+		Sleep(GAME_Tickrate());
 	}
 	return 0;
 }
@@ -141,7 +141,7 @@ static void GUI_Interact(void)
 	if(K_4) // mouse toggle (4)
 	{
 		MOUSE_Lock();
-		MOUSE_Update();
+		MOUSE_Update(GAME_Tickrate());
 		mousetoggle = !mousetoggle;
 		updateinterface = 1;
 	}
@@ -150,7 +150,7 @@ static void GUI_Interact(void)
 		selectedoption = EDITINGSENSITIVITY;
 		updateinterface = 1;
 	}
-	if(K_6 && !locksettings && !updateinterface) // crosshair sensitivity (6)
+	if(K_6 && !locksettings && !updateinterface && GAME_CrosshairSwaySupported()) // crosshair sensitivity (6)
 	{
 		selectedoption = EDITINGCROSSHAIR;
 		updateinterface = 1;
@@ -164,7 +164,7 @@ static void GUI_Interact(void)
 	{
 		if(selectedoption == EDITINGSENSITIVITY && sensitivity < 100)
 			sensitivity++, updateinterface = 1;
-		if(selectedoption == EDITINGCROSSHAIR && crosshair < 18)
+		if(selectedoption == EDITINGCROSSHAIR && crosshair < 18 && GAME_CrosshairSwaySupported())
 			crosshair++, updateinterface = 1;
 		updatequick = 1;
 	}
@@ -172,7 +172,7 @@ static void GUI_Interact(void)
 	{
 		if(selectedoption == EDITINGSENSITIVITY && sensitivity > 1)
 			sensitivity--, updateinterface = 1;
-		if(selectedoption == EDITINGCROSSHAIR && crosshair > 0)
+		if(selectedoption == EDITINGCROSSHAIR && crosshair > 0 && GAME_CrosshairSwaySupported())
 			crosshair--, updateinterface = 1;
 		updatequick = 1;
 	}
@@ -202,7 +202,7 @@ static void GUI_Update(void)
 {
 	GUI_Clear();
 	GAME_Status(); // refresh driver for title
-	printf("\n Mouse Injector for %s %s\n", GAME_Name() == NULL ? DOLPHINVERSION : GAME_Name(), BUILDINFO); // title
+	printf("\n Mouse Injector for %s %s\n", GAME_Name(), BUILDINFO); // title
 	printf("%s\n\n   Main Menu - Press [#] to Use Menu\n\n\n", LINE);
 	printf(mousetoggle ? "   [4] - [ON] Mouse Injection\n\n" : "   [4] - [OFF] Mouse Injection\n\n");
 	if(!locksettings)
@@ -210,7 +210,10 @@ static void GUI_Update(void)
 		printf("   [5] - Mouse Sensitivity: %d%%", sensitivity * 5);
 		printf(selectedoption == EDITINGSENSITIVITY ? " [+/-]\n\n" : "\n\n");
 		printf("   [6] - Crosshair Sway: ");
-		printf(crosshair ? "%d%%" : "Locked", crosshair * 100 / 6);
+		if(GAME_CrosshairSwaySupported())
+			printf(crosshair ? "%d%%" : "Locked", crosshair * 100 / 6);
+		else
+			printf("Not Available For Game");
 		printf(selectedoption == EDITINGCROSSHAIR ? " [+/-]\n\n" : "\n\n");
 		printf(invertpitch ? "   [7] - [ON] Invert Pitch\n\n" : "   [7] - [OFF] Invert Pitch\n\n");
 		printf("\n\n\n\n\n");
@@ -233,14 +236,15 @@ static void GUI_ListGames(void)
 {
 	GUI_Clear();
 	printf("\n Mouse Injector for %s %s\n%s\n\n", DOLPHINVERSION, BUILDINFO, LINE);
-	printf("   List of Supported Games (NTSC)\t\tGame IDs\n%s\n\n", LINE);
+	printf("   List of Supported Games (NTSC Only)\t\tGame IDs\n\n");
 	printf("    TimeSplitters 2\t\t\t\t GTSE4F\n\n");
 	printf("    TimeSplitters: Future Perfect\t\t G3FE69\n\n");
 	printf("    007: NightFire\t\t\t\t GO7E69\n\n");
 	printf("    Medal of Honor: Frontline\t\t\t GMFE69\n\n");
 	printf("    Medal of Honor: European Assault\t\t GONE69\n\n");
 	printf("    Call of Duty 2: Big Red One\t\t\t GQCE52\n\n");
-	printf("    Die Hard: Vendetta\t\t\t\t GDIE7D\n\n\n");
+	printf("    Die Hard: Vendetta\t\t\t\t GDIE7D\n\n");
+	printf("    Serious Sam: Next Encounter\t\t\t G3BE9G\n\n");
 	printf("   Returning to Main Menu in 10 Seconds...\n%s\n", LINE);
 }
 //==========================================================================

@@ -46,7 +46,9 @@ static const GAMEDRIVER GAMEDRIVER_INTERFACE =
 {
 	"TimeSplitters 2",
 	TS2_Status,
-	TS2_Inject
+	TS2_Inject,
+	1, // 1000 Hz tickrate
+	1 // crosshair sway supported for driver
 };
 
 const GAMEDRIVER *GAME_TS2 = &GAMEDRIVER_INTERFACE;

@@ -1,6 +1,6 @@
-# Mouse Injector for Dolphin 5.0 (10270)
+# Mouse Injector for Dolphin 5.0 (10960)
 
-* [dolphin-5.0-10270-mouse-injector.7z](https://github.com/carnivoroussociety/MouseInjectorDolphin/releases/download/v0.22/dolphin-5.0-10270-mouse-injector.7z)
+* [dolphin-5.0-10960-mouse-injector.7z](https://github.com/carnivoroussociety/MouseInjectorDolphin/releases/download/v0.3/dolphin-5.0-10960-mouse-injector.7z)
 
 A external app that injects cursor input into game memory, bundled with Dolphin emulator.
 
@@ -11,11 +11,12 @@ I have no intentions of maintaining this software. Pull requests will be ignored
 # How to Use
 Follow the quick start guide in the included readme.txt file
 
-# Supported Titles
+# Supported Titles (NTSC Only)
 
 * TimeSplitters 2
 * TimeSplitters: Future Perfect
 * 007: NightFire
+* Serious Sam: Next Encounter
 
 These games are supported but lack preconfigured input profiles/saves.
 

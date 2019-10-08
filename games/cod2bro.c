@@ -41,7 +41,9 @@ static const GAMEDRIVER GAMEDRIVER_INTERFACE =
 {
 	"Call of Duty 2: Big Red One",
 	COD2BRO_Status,
-	COD2BRO_Inject
+	COD2BRO_Inject,
+	1, // 1000 Hz tickrate
+	1 // crosshair sway not supported for driver
 };
 
 const GAMEDRIVER *GAME_COD2BRO = &GAMEDRIVER_INTERFACE;

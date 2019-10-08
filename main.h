@@ -17,10 +17,9 @@
 // You should have received a copy of the GNU General Public License
 // along with this program; if not, visit http://www.gnu.org/licenses/gpl-2.0.html
 //==========================================================================
-#define DOLPHINVERSION "Dolphin 5.0-10270"
-#define BUILDINFO "(v0.22 - "__DATE__")"
+#define DOLPHINVERSION "Dolphin 5.0-10960"
+#define BUILDINFO "(v0.3 - "__DATE__")"
 #define LINE "_______________________________________________________________"
-#define TICKRATE 1 // run mouse injector at 1000 Hz
 // input for interface
 #define K_4 GetAsyncKeyState(0x34) // key '4'
 #define K_5 GetAsyncKeyState(0x35) // key '5'

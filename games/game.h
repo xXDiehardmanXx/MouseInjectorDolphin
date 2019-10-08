@@ -22,8 +22,12 @@ typedef struct
 	const char *Name;
 	uint8_t (*Status)(void);
 	void (*Inject)(void);
+	uint16_t Tickrate;
+	uint8_t Crosshair;
 } GAMEDRIVER;
 
 extern uint8_t GAME_Status(void);
 extern void GAME_Inject(void);
 extern const char *GAME_Name(void);
+extern uint16_t GAME_Tickrate(void);
+extern uint8_t GAME_CrosshairSwaySupported(void);

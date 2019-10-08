@@ -48,7 +48,9 @@ static const GAMEDRIVER GAMEDRIVER_INTERFACE =
 {
 	"Die Hard: Vendetta",
 	DHV_Status,
-	DHV_Inject
+	DHV_Inject,
+	1, // 1000 Hz tickrate
+	1 // crosshair sway supported for driver
 };
 
 const GAMEDRIVER *GAME_DHV = &GAMEDRIVER_INTERFACE;

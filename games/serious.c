@@ -17,6 +17,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program; if not, visit http://www.gnu.org/licenses/gpl-2.0.html
 //==========================================================================
+#include <stdio.h>
 #include <stdint.h>
 #include "../main.h"
 #include "../memory.h"
@@ -25,61 +26,60 @@
 
 #define PI 3.14159265f // 0x40490FDB
 #define TAU 6.2831853f // 0x40C90FDB
-#define CROSSHAIRY 1.483529925f // 0x3FBDE44F
-// MOHEA ADDRESSES - OFFSET ADDRESSES BELOW (REQUIRES PLAYERBASE TO USE)
-#define MOHEA_camx 0x80A7E610 - 0x80A7E500
-#define MOHEA_camy 0x80A7E608 - 0x80A7E500
-#define MOHEA_fov 0x80A7E638 - 0x80A7E500
-#define MOHEA_health 0x80A7E8D0 - 0x80A7E500
+#define CAMYLIMITPLUS 1.308996916f // 0x3FA78D36
+#define CAMYLIMITMINUS -1.308996916f // 0xBFA78D36
+// COD2BRO ADDRESSES - OFFSET ADDRESSES BELOW (REQUIRES PLAYERBASE TO USE)
+#define SERIOUS_camx 0x8133C930 - 0x8133C6A0
+#define SERIOUS_camy 0x8133C934 - 0x8133C6A0
+#define SERIOUS_fov 0x8133C99C - 0x8133C6A0
 // STATIC ADDRESSES BELOW
-#define MOHEA_playerbase 0x80574308 // playable character pointer
+#define SERIOUS_playerbase 0x802D8948 // playable character pointer
 
-static uint8_t MOHEA_Status(void);
-static void MOHEA_Inject(void);
+static uint8_t SERIOUS_Status(void);
+static void SERIOUS_Inject(void);
 
 static const GAMEDRIVER GAMEDRIVER_INTERFACE =
 {
-	"Medal of Honor: European Assault",
-	MOHEA_Status,
-	MOHEA_Inject,
-	1, // 1000 Hz tickrate
-	1 // crosshair sway not supported for driver
+	"Serious Sam: Next Encounter",
+	SERIOUS_Status,
+	SERIOUS_Inject,
+	12, // if tickrate is any lower, mouse input will get sluggish
+	0
 };
 
-const GAMEDRIVER *GAME_MOHEA = &GAMEDRIVER_INTERFACE;
+const GAMEDRIVER *GAME_SERIOUS = &GAMEDRIVER_INTERFACE;
 
 //==========================================================================
 // Purpose: return 1 if game is detected
 //==========================================================================
-static uint8_t MOHEA_Status(void)
+static uint8_t SERIOUS_Status(void)
 {
-	return (MEM_ReadUInt(0x80000000) == 0x474F4E45U && MEM_ReadUInt(0x80000004) == 0x36390000U); // check game header to see if it matches MOHEA
+	return (MEM_ReadUInt(0x80000000) == 0x47334245U && MEM_ReadUInt(0x80000004) == 0x39470001U); // check game header to see if it matches SERIOUS
 }
 //==========================================================================
 // Purpose: calculate mouse look and inject into current game
 //==========================================================================
-static void MOHEA_Inject(void)
+static void SERIOUS_Inject(void)
 {
 	if(xmouse == 0 && ymouse == 0) // if mouse is idle
 		return;
-	const uint32_t playerbase = MEM_ReadUInt(MOHEA_playerbase);
-	if(NOTWITHINMEMRANGE(playerbase)) // if playerbase is invalid
+	const uint32_t playerbase = MEM_ReadUInt(SERIOUS_playerbase);
+	if(!playerbase) // if playerbase is invalid
 		return;
-	const float fov = MEM_ReadFloat(playerbase + MOHEA_fov);
-	const float health = MEM_ReadFloat(playerbase + MOHEA_health);
-	float camx = MEM_ReadFloat(playerbase + MOHEA_camx);
-	float camy = MEM_ReadFloat(playerbase + MOHEA_camy);
 	const float looksensitivity = (float)sensitivity / 40.f;
-	if(camx >= -TAU && camx <= TAU && camy >= -CROSSHAIRY && camy <= CROSSHAIRY && health > 0)
+	const float fov = MEM_ReadFloat(playerbase + SERIOUS_fov);
+	float camx = MEM_ReadFloat(playerbase + SERIOUS_camx);
+	float camy = MEM_ReadFloat(playerbase + SERIOUS_camy);
+	if(camx > -TAU && camx < TAU && fov > 9.f)
 	{
-		camx -= (float)xmouse / 10.f * looksensitivity / (360.f / TAU) / (35.f / fov); // normal calculation method for X
-		camy += (float)(!invertpitch ? -ymouse : ymouse) / 10.f * looksensitivity / (90.f / CROSSHAIRY) / (35.f / fov); // normal calculation method for Y
-		if(camx <= -TAU)
-			camx += TAU;
-		else if(camx >= TAU)
+		camx += (float)xmouse / 10.f * looksensitivity / (360.f / TAU) * (fov / 90); // normal calculation method for X
+		camy += (float)(invertpitch ? -ymouse : ymouse) / 10.f * looksensitivity / (90.f / PI) * (fov / 90); // normal calculation method for Y
+		if(camx >= TAU)
 			camx -= TAU;
-		camy = ClampFloat(camy, -CROSSHAIRY, CROSSHAIRY);
-		MEM_WriteFloat(playerbase + MOHEA_camx, camx);
-		MEM_WriteFloat(playerbase + MOHEA_camy, camy);
+		else if(camx <= TAU)
+			camx += TAU;
+		camy = ClampFloat(camy, CAMYLIMITMINUS, CAMYLIMITPLUS);
+		MEM_WriteFloat(playerbase + SERIOUS_camx, camx);
+		MEM_WriteFloat(playerbase + SERIOUS_camy, camy);
 	}
 }

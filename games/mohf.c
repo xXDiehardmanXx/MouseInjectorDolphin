@@ -45,7 +45,9 @@ static const GAMEDRIVER GAMEDRIVER_INTERFACE =
 {
 	"Medal of Honor: Frontline",
 	MOHF_Status,
-	MOHF_Inject
+	MOHF_Inject,
+	1, // 1000 Hz tickrate
+	0 // crosshair sway not supported for driver
 };
 
 const GAMEDRIVER *GAME_MOHF = &GAMEDRIVER_INTERFACE;

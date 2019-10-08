@@ -50,7 +50,9 @@ static const GAMEDRIVER GAMEDRIVER_INTERFACE =
 {
 	"TimeSplitters: Future Perfect",
 	TS3_Status,
-	TS3_Inject
+	TS3_Inject,
+	1, // 1000 Hz tickrate
+	1 // crosshair sway supported for driver
 };
 
 const GAMEDRIVER *GAME_TS3 = &GAMEDRIVER_INTERFACE;

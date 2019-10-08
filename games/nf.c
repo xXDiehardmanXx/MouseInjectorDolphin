@@ -53,7 +53,9 @@ static const GAMEDRIVER GAMEDRIVER_INTERFACE =
 {
 	"007: NightFire",
 	NF_Status,
-	NF_Inject
+	NF_Inject,
+	1, // 1000 Hz tickrate
+	1 // crosshair sway supported for driver
 };
 
 const GAMEDRIVER *GAME_NF = &GAMEDRIVER_INTERFACE;
