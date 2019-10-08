@@ -43,7 +43,7 @@ static const GAMEDRIVER GAMEDRIVER_INTERFACE =
 	MOHEA_Status,
 	MOHEA_Inject,
 	1, // 1000 Hz tickrate
-	1 // crosshair sway not supported for driver
+	0 // crosshair sway not supported for driver
 };
 
 const GAMEDRIVER *GAME_MOHEA = &GAMEDRIVER_INTERFACE;

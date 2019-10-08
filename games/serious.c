@@ -44,7 +44,7 @@ static const GAMEDRIVER GAMEDRIVER_INTERFACE =
 	SERIOUS_Status,
 	SERIOUS_Inject,
 	12, // if tickrate is any lower, mouse input will get sluggish
-	0
+	0 // crosshair sway not supported for driver
 };
 
 const GAMEDRIVER *GAME_SERIOUS = &GAMEDRIVER_INTERFACE;
