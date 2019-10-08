@@ -17,7 +17,6 @@
 // You should have received a copy of the GNU General Public License
 // along with this program; if not, visit http://www.gnu.org/licenses/gpl-2.0.html
 //==========================================================================
-#include <stdio.h>
 #include <stdint.h>
 #include "../main.h"
 #include "../memory.h"
