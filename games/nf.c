@@ -41,7 +41,7 @@
 #define NF_sentryx 0x81112E94 - 0x81112CE0
 #define NF_sentryy 0x81112E90 - 0x81112CE0
 // STATIC ADDRESSES BELOW
-#define NF_playerbase 0x802956F4 // playable character pointer
+#define NF_playerbase 0x802BE87C // playable character pointer
 #define NF_sentrybase 0x803780DC // sentry interface pointer (heli/jet ski)
 #define NF_sentryfov 0x802E441C // sentry fov
 #define NF_pauseflag 0x8024C2B4
