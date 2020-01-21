@@ -1,7 +1,7 @@
 //==========================================================================
 // Mouse Injector for Dolphin
 //==========================================================================
-// Copyright (C) 2019 Carnivorous
+// Copyright (C) 2019-2020 Carnivorous
 // All rights reserved.
 //
 // Mouse Injector is free software; you can redistribute it and/or modify it
@@ -19,21 +19,21 @@
 //==========================================================================
 A ICON MOVEABLE PURE LOADONCALL DISCARDABLE "icon.ico"
 1 VERSIONINFO
-FILEVERSION 0,3,0,0
-PRODUCTVERSION 0,3,0,0
+FILEVERSION 0,3,1,0
+PRODUCTVERSION 0,3,1,0
 {
 	BLOCK "StringFileInfo"
 	{
 		BLOCK "040904E4"
 		{
-			VALUE "FileVersion", "0, 3, 0, 0"
+			VALUE "FileVersion", "0, 3, 1, 0"
 			VALUE "FileDescription", "Mouse Injector for Dolphin"
 			VALUE "InternalName", "Mouse Injector"
-			VALUE "LegalCopyright", "Copyright (C) 2019 Carnivorous"
+			VALUE "LegalCopyright", "Copyright (C) 2020 Carnivorous"
 			VALUE "LegalTrademarks", ""
 			VALUE "OriginalFilename", "Mouse Injector.exe"
 			VALUE "ProductName", "Mouse Injector for Dolphin"
-			VALUE "ProductVersion", "0, 3, 0, 0"
+			VALUE "ProductVersion", "0, 3, 1, 0"
 			VALUE "CompanyName", ""
 		}
 	}
