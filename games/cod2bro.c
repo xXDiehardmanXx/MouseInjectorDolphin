@@ -1,7 +1,7 @@
 //==========================================================================
 // Mouse Injector for Dolphin
 //==========================================================================
-// Copyright (C) 2019 Carnivorous
+// Copyright (C) 2019-2020 Carnivorous
 // All rights reserved.
 //
 // Mouse Injector is free software; you can redistribute it and/or modify it
@@ -108,9 +108,9 @@ static void COD2BRO_Inject(void)
 	{
 		camx -= (float)xmouse / 10.f * looksensitivity * (fov / 1.f); // normal calculation method for X
 		camy += (float)(invertpitch ? -ymouse : ymouse) / 10.f * looksensitivity * (fov / 1.f); // normal calculation method for Y
-		if(camx < -360)
+		while(camx < -360)
 			camx += 360;
-		else if(camx >= 360)
+		while(camx >= 360)
 			camx -= 360;
 		MEM_WriteFloat(camxaddress, camx);
 		MEM_WriteFloat(camyaddress, camy);

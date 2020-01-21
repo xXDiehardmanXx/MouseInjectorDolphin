@@ -1,6 +1,6 @@
-# Mouse Injector for Dolphin 5.0 (11518)
+# Mouse Injector for Dolphin 5.0 (11524)
 
-* [dolphin-5.0-11518-mouse-injector.7z](https://github.com/carnivoroussociety/MouseInjectorDolphin/releases/download/v0.3/dolphin-5.0-11518-mouse-injector.7z)
+* [dolphin-5.0-11524-mouse-injector.7z](https://github.com/carnivoroussociety/MouseInjectorDolphin/releases/download/v0.31/dolphin-5.0-11524-mouse-injector.7z)
 
 A external app that injects cursor input into game memory, bundled with Dolphin emulator.
 
@@ -22,6 +22,7 @@ These games are supported but lack preconfigured input profiles/saves.
 
 * Medal of Honor: Frontline
 * Medal of Honor: European Assault
+* Medal of Honor: Rising Sun
 * Call of Duty 2: Big Red One
 * Die Hard: Vendetta
 

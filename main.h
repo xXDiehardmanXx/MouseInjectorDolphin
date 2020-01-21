@@ -1,7 +1,7 @@
 //==========================================================================
 // Mouse Injector for Dolphin
 //==========================================================================
-// Copyright (C) 2019 Carnivorous
+// Copyright (C) 2019-2020 Carnivorous
 // All rights reserved.
 //
 // Mouse Injector is free software; you can redistribute it and/or modify it
@@ -17,9 +17,9 @@
 // You should have received a copy of the GNU General Public License
 // along with this program; if not, visit http://www.gnu.org/licenses/gpl-2.0.html
 //==========================================================================
-#define DOLPHINVERSION "Dolphin 5.0-11518"
-#define BUILDINFO "(v0.3 - "__DATE__")"
-#define LINE "_______________________________________________________________"
+#define DOLPHINVERSION "Dolphin 5.0-11524"
+#define BUILDINFO "(v0.31 - "__DATE__")"
+#define LINE "__________________________________________________________________"
 // input for interface
 #define K_4 GetAsyncKeyState(0x34) // key '4'
 #define K_5 GetAsyncKeyState(0x35) // key '5'

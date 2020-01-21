@@ -1,7 +1,7 @@
 //==========================================================================
 // Mouse Injector for Dolphin
 //==========================================================================
-// Copyright (C) 2019 Carnivorous
+// Copyright (C) 2019-2020 Carnivorous
 // All rights reserved.
 //
 // Mouse Injector is free software; you can redistribute it and/or modify it
@@ -235,16 +235,16 @@ static void GUI_Update(void)
 static void GUI_ListGames(void)
 {
 	GUI_Clear();
-	printf("\n Mouse Injector for %s %s\n%s\n\n", DOLPHINVERSION, BUILDINFO, LINE);
-	printf("   List of Supported Games (NTSC Only)\t\tGame IDs\n\n");
-	printf("    TimeSplitters 2\t\t\t\t GTSE4F\n\n");
-	printf("    TimeSplitters: Future Perfect\t\t G3FE69\n\n");
-	printf("    007: NightFire\t\t\t\t GO7E69\n\n");
-	printf("    Medal of Honor: Frontline\t\t\t GMFE69\n\n");
-	printf("    Medal of Honor: European Assault\t\t GONE69\n\n");
-	printf("    Call of Duty 2: Big Red One\t\t\t GQCE52\n\n");
-	printf("    Die Hard: Vendetta\t\t\t\t GDIE7D\n\n");
-	printf("    Serious Sam: Next Encounter\t\t\t G3BE9G\n\n");
+	printf("\n Supported Games (NTSC Only)\t\tGame IDs     Mouse Support\n%s\n\n", LINE);
+	printf("    TimeSplitters 2\t\t\t GTSE4F\t\t Fair\n\n");
+	printf("    TimeSplitters: Future Perfect\t G3FE69\t\t Fair\n\n");
+	printf("    007: NightFire\t\t\t GO7E69\t\t Poor\n\n");
+	printf("    Medal of Honor: Frontline\t\t GMFE69\t\t Good\n\n");
+	printf("    Medal of Honor: European Assault\t GONE69\t\t Good\n\n");
+	printf("    Medal of Honor: Rising Sun\t\t GR8E69\t\t Poor\n\n");
+	printf("    Call of Duty 2: Big Red One\t\t GQCE52\t\t Good\n\n");
+	printf("    Die Hard: Vendetta\t\t\t GDIE7D\t\t Fair\n\n");
+	printf("    Serious Sam: Next Encounter\t\t G3BE9G\t\t Fair\n\n");
 	printf("   Returning to Main Menu in 10 Seconds...\n%s\n", LINE);
 }
 //==========================================================================

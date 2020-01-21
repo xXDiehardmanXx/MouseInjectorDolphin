@@ -1,7 +1,7 @@
 //==========================================================================
 // Mouse Injector for Dolphin
 //==========================================================================
-// Copyright (C) 2019 Carnivorous
+// Copyright (C) 2019-2020 Carnivorous
 // All rights reserved.
 //
 // Mouse Injector is free software; you can redistribute it and/or modify it
@@ -90,9 +90,9 @@ static void NF_Inject(void)
 		{
 			camx -= (float)xmouse / 10.f * looksensitivity / (360.f / TAU) / (fov / 1.f); // normal calculation method for X
 			camy += (float)(!invertpitch ? -ymouse : ymouse) / 10.f * looksensitivity / 90.f / (fov / 1.f); // normal calculation method for Y
-			if(camx <= -PI)
+			while(camx <= -PI)
 				camx += TAU;
-			else if(camx >= PI)
+			while(camx >= PI)
 				camx -= TAU;
 			camy = ClampFloat(camy, -1.f, 1.f);
 			MEM_WriteFloat(playerbase + NF_camx, camx);
@@ -120,9 +120,9 @@ static void NF_Inject(void)
 		{
 			sentryx += (float)xmouse / 10.f * looksensitivity / 360.f / (SENTRYFOVBASE / fov);
 			sentryy += (float)(!invertpitch ? ymouse : -ymouse) / 10.f * looksensitivity / (90.f / (SENTRYMAXY - SENTRYMINY)) / (SENTRYFOVBASE / fov);
-			if(sentryx <= -1.f)
+			while(sentryx <= -1.f)
 				sentryx += 1.f;
-			else if(sentryx >= 1.f)
+			while(sentryx >= 1.f)
 				sentryx -= 1.f;
 			sentryy = ClampFloat(sentryy, SENTRYMINY, SENTRYMAXY);
 			MEM_WriteFloat(sentrybase + NF_sentryx, sentryx);

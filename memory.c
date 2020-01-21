@@ -1,7 +1,7 @@
 //==========================================================================
 // Mouse Injector for Dolphin
 //==========================================================================
-// Copyright (C) 2019 Carnivorous
+// Copyright (C) 2019-2020 Carnivorous
 // All rights reserved.
 //
 // Mouse Injector is free software; you can redistribute it and/or modify it
@@ -23,7 +23,7 @@
 #include <psapi.h>
 #include "memory.h"
 
-#define DOLPHIN_PTR 0xF32DA8 // offset within dolphin.exe module that points to gamecube memory
+#define DOLPHIN_PTR 0xF33DB8 // offset within dolphin.exe module that points to gamecube memory
 
 static uint64_t emuoffset = 0;
 static HANDLE emuhandle = NULL;

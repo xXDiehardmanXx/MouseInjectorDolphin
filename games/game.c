@@ -1,7 +1,7 @@
 //==========================================================================
 // Mouse Injector for Dolphin
 //==========================================================================
-// Copyright (C) 2019 Carnivorous
+// Copyright (C) 2019-2020 Carnivorous
 // All rights reserved.
 //
 // Mouse Injector is free software; you can redistribute it and/or modify it
@@ -27,6 +27,7 @@ extern const GAMEDRIVER *GAME_TS3;
 extern const GAMEDRIVER *GAME_NF;
 extern const GAMEDRIVER *GAME_MOHF;
 extern const GAMEDRIVER *GAME_MOHEA;
+extern const GAMEDRIVER *GAME_MOHRS;
 extern const GAMEDRIVER *GAME_DHV;
 extern const GAMEDRIVER *GAME_COD2BRO;
 extern const GAMEDRIVER *GAME_SERIOUS;
@@ -38,6 +39,7 @@ static const GAMEDRIVER **GAMELIST[] =
 	&GAME_NF,
 	&GAME_MOHF,
 	&GAME_MOHEA,
+	&GAME_MOHRS,
 	&GAME_DHV,
 	&GAME_COD2BRO,
 	&GAME_SERIOUS

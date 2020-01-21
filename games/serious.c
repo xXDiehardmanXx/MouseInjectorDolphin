@@ -1,7 +1,7 @@
 //==========================================================================
 // Mouse Injector for Dolphin
 //==========================================================================
-// Copyright (C) 2019 Carnivorous
+// Copyright (C) 2019-2020 Carnivorous
 // All rights reserved.
 //
 // Mouse Injector is free software; you can redistribute it and/or modify it
@@ -73,9 +73,9 @@ static void SERIOUS_Inject(void)
 	{
 		camx += (float)xmouse / 10.f * looksensitivity / (360.f / TAU) * (fov / 90); // normal calculation method for X
 		camy += (float)(invertpitch ? -ymouse : ymouse) / 10.f * looksensitivity / (90.f / PI) * (fov / 90); // normal calculation method for Y
-		if(camx >= TAU)
+		while(camx >= TAU)
 			camx -= TAU;
-		else if(camx <= TAU)
+		while(camx <= TAU)
 			camx += TAU;
 		camy = ClampFloat(camy, CAMYLIMITMINUS, CAMYLIMITPLUS);
 		MEM_WriteFloat(playerbase + SERIOUS_camx, camx);
