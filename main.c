@@ -232,14 +232,25 @@ static void GUI_Update(void)
 //==========================================================================
 // Purpose: print list of supported games
 //==========================================================================
+// Driver quality report
+// TS2: camera/sentry interfaces not supported (hardcoded per level setup)
+// TS3: all non-first person interfaces are not supported (many are hardcoded)
+// NF: vehicle interface is semi-functional (fudged min/max) - last level is broken
+// MOHF: works except for minecart level (level hardcode that breaks turret support)
+// MOHER: fully supported
+// MOHRS: looking down scope while in turret interface is broken (needs assembly hack)
+// CODBRO: fully supported
+// DHV: aiming sometimes breaks, sentry interface not supported
+// SERIOUS: vehicle/submarine interfaces not supported
+//==========================================================================
 static void GUI_ListGames(void)
 {
 	GUI_Clear();
 	printf("\n Supported Games (NTSC Only)\t\tGame IDs     Mouse Support\n%s\n\n", LINE);
 	printf("    TimeSplitters 2\t\t\t GTSE4F\t\t Fair\n\n");
-	printf("    TimeSplitters: Future Perfect\t G3FE69\t\t Fair\n\n");
+	printf("    TimeSplitters: Future Perfect\t G3FE69\t\t Poor\n\n");
 	printf("    007: NightFire\t\t\t GO7E69\t\t Poor\n\n");
-	printf("    Medal of Honor: Frontline\t\t GMFE69\t\t Good\n\n");
+	printf("    Medal of Honor: Frontline\t\t GMFE69\t\t Fair\n\n");
 	printf("    Medal of Honor: European Assault\t GONE69\t\t Good\n\n");
 	printf("    Medal of Honor: Rising Sun\t\t GR8E69\t\t Poor\n\n");
 	printf("    Call of Duty 2: Big Red One\t\t GQCE52\t\t Good\n\n");
