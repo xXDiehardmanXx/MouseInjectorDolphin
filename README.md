@@ -1,6 +1,6 @@
-# Mouse Injector for Dolphin 5.0 (11535)
+# Mouse Injector for Dolphin 5.0 (11701)
 
-* [dolphin-5.0-11535-mouse-injector.7z](https://github.com/carnivoroussociety/MouseInjectorDolphin/releases/download/v0.31/dolphin-5.0-11535-mouse-injector.7z)
+* [dolphin-5.0-11701-mouse-injector.7z](https://github.com/carnivoroussociety/MouseInjectorDolphin/releases/download/v0.31/dolphin-5.0-11701-mouse-injector.7z)
 
 A external app that injects cursor input into game memory, bundled with Dolphin emulator.
 
@@ -12,19 +12,17 @@ I have no intentions of maintaining this software. Pull requests will be ignored
 Follow the quick start guide in the included readme.txt file
 
 # Supported Titles (NTSC Only)
-
-* TimeSplitters 2
-* TimeSplitters: Future Perfect
-* 007: NightFire
-* Serious Sam: Next Encounter
-
-These games are supported but lack preconfigured input profiles/saves.
-
-* Medal of Honor: Frontline
-* Medal of Honor: European Assault
-* Medal of Honor: Rising Sun
-* Call of Duty 2: Big Red One
-* Die Hard: Vendetta
+| Game Title | Input Profile | Mouse Support | Game Driver Issues |
+| --- | :---: | :---: | ----------- |
+| TimeSplitters 2 | :heavy_check_mark: | Fair | <sup>Camera/sentry modes not supported</sub> |
+| TimeSplitters: Future Perfect | :heavy_check_mark: | Poor | <sup>All non-first person modes are not supported</sub> |
+| 007: NightFire | :heavy_check_mark: | Poor | <sup>Vehicle mode is semi-functional - last level is broken</sub> |
+| Serious Sam: Next Encounter | :heavy_check_mark: | Fair | <sup>Vehicle/submarine interfaces are not supported</sub> |
+| Medal of Honor: Frontline | :white_check_mark: | Fair | <sup>Minecart level is broken</sub> |
+| Medal of Honor: European Assault | :white_check_mark: | Good | <sup>None</sub> |
+| Medal of Honor: Rising Sun | :white_check_mark: | Poor | <sup>Looking down scope while in turret mode is broken</sub> |
+| Call of Duty 2: Big Red One | :white_check_mark: | Good | <sup>None</sub> |
+| Die Hard: Vendetta | :white_check_mark: | Fair | <sup>Aiming sometimes breaks - sentry mode not supported</sub> |
 
 # ManyMouse
 
