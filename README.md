@@ -18,11 +18,11 @@ Follow the quick start guide in the included readme.txt file
 | TimeSplitters: Future Perfect | :heavy_check_mark: | Poor | <sup>All non-first person modes are not supported</sub> |
 | 007: NightFire | :heavy_check_mark: | Poor | <sup>Vehicle mode is semi-functional - last level is broken</sub> |
 | Serious Sam: Next Encounter | :heavy_check_mark: | Fair | <sup>Vehicle/submarine interfaces are not supported</sub> |
-| Medal of Honor: Frontline | :negative_squared_cross_mark: | Fair | <sup>Minecart level is broken</sub> |
-| Medal of Honor: European Assault | :negative_squared_cross_mark: | Good | <sup>None</sub> |
-| Medal of Honor: Rising Sun | :negative_squared_cross_mark: | Poor | <sup>Looking down scope while in turret mode is broken</sub> |
-| Call of Duty 2: Big Red One | :negative_squared_cross_mark: | Good | <sup>None</sub> |
-| Die Hard: Vendetta | :negative_squared_cross_mark: | Fair | <sup>Aiming sometimes breaks - sentry mode not supported</sub> |
+| Medal of Honor: Frontline | :heavy_multiplication_x: | Fair | <sup>Minecart level is broken</sub> |
+| Medal of Honor: European Assault | :heavy_multiplication_x: | Good | <sup>None</sub> |
+| Medal of Honor: Rising Sun | :heavy_multiplication_x: | Poor | <sup>Looking down scope while in turret mode is broken</sub> |
+| Call of Duty 2: Big Red One | :heavy_multiplication_x: | Good | <sup>None</sub> |
+| Die Hard: Vendetta | :heavy_multiplication_x: | Fair | <sup>Aiming sometimes breaks - sentry mode not supported</sub> |
 
 # ManyMouse
 
