@@ -1,6 +1,6 @@
-# Mouse Injector for Dolphin 5.0 (11701)
+# Mouse Injector for Dolphin 5.0 (11824)
 
-* [dolphin-5.0-11701-mouse-injector.7z](https://github.com/carnivoroussociety/MouseInjectorDolphin/releases/download/v0.31/dolphin-5.0-11701-mouse-injector.7z)
+* [dolphin-5.0-11824-mouse-injector.7z](https://github.com/carnivoroussociety/MouseInjectorDolphin/releases/download/v0.31/dolphin-5.0-11824-mouse-injector.7z)
 
 A external app that injects cursor input into game memory, bundled with Dolphin emulator.
 

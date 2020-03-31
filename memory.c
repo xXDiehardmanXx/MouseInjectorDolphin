@@ -23,7 +23,7 @@
 #include <psapi.h>
 #include "memory.h"
 
-#define DOLPHIN_PTR 0xF56ED8 // offset within dolphin.exe module that points to gamecube memory
+#define DOLPHIN_PTR 0xF5EF78 // offset within dolphin.exe module that points to gamecube memory
 
 static uint64_t emuoffset = 0;
 static HANDLE emuhandle = NULL;
@@ -37,6 +37,7 @@ float MEM_ReadFloat(const uint32_t addr);
 void MEM_WriteInt(const uint32_t addr, int32_t value);
 void MEM_WriteUInt(const uint32_t addr, uint32_t value);
 void MEM_WriteFloat(const uint32_t addr, float value);
+static void MEM_ByteSwap32(uint32_t *input);
 
 //==========================================================================
 // Purpose: initialize dolphin handle and setup for memory injection
@@ -107,7 +108,7 @@ int32_t MEM_ReadInt(const uint32_t addr)
 		return 0;
 	int32_t output; // temp var used for output of function
 	ReadProcessMemory(emuhandle, (LPVOID)(emuoffset + (addr - 0x80000000)), &output, sizeof(output), NULL);
-	__asm__("bswapl %0" : "=r" (output) : "0" (output)); // byteswap in assembly
+	MEM_ByteSwap32((uint32_t *)&output); // byteswap
 	return output;
 }
 //==========================================================================
@@ -120,7 +121,7 @@ uint32_t MEM_ReadUInt(const uint32_t addr)
 		return 0;
 	uint32_t output; // temp var used for output of function
 	ReadProcessMemory(emuhandle, (LPVOID)(emuoffset + (addr - 0x80000000)), &output, sizeof(output), NULL);
-	__asm__("bswapl %0" : "=r" (output) : "0" (output)); // byteswap in assembly
+	MEM_ByteSwap32(&output); // byteswap
 	return output;
 }
 //==========================================================================
@@ -133,7 +134,7 @@ float MEM_ReadFloat(const uint32_t addr)
 		return 0;
 	float output; // temp var used for output of function
 	ReadProcessMemory(emuhandle, (LPVOID)(emuoffset + (addr - 0x80000000)), &output, sizeof(output), NULL);
-	__asm__("bswapl %0" : "=r" (output) : "0" (output)); // byteswap in assembly
+	MEM_ByteSwap32((uint32_t *)&output); // byteswap
 	return output;
 }
 //==========================================================================
@@ -144,7 +145,7 @@ void MEM_WriteInt(const uint32_t addr, int32_t value)
 {
 	if(!emuoffset || NOTWITHINMEMRANGE(addr)) // if gamecube memory has not been init by dolphin or writing to outside of memory range
 		return;
-	__asm__("bswapl %0" : "=r" (value) : "0" (value)); // byteswap in assembly
+	MEM_ByteSwap32((uint32_t *)&value); // byteswap
 	WriteProcessMemory(emuhandle, (LPVOID)(emuoffset + (addr - 0x80000000)), &value, sizeof(value), NULL);
 }
 //==========================================================================
@@ -155,7 +156,7 @@ void MEM_WriteUInt(const uint32_t addr, uint32_t value)
 {
 	if(!emuoffset || NOTWITHINMEMRANGE(addr)) // if gamecube memory has not been init by dolphin or writing to outside of memory range
 		return;
-	__asm__("bswapl %0" : "=r" (value) : "0" (value)); // byteswap in assembly
+	MEM_ByteSwap32(&value); // byteswap
 	WriteProcessMemory(emuhandle, (LPVOID)(emuoffset + (addr - 0x80000000)), &value, sizeof(value), NULL);
 }
 //==========================================================================
@@ -166,6 +167,15 @@ void MEM_WriteFloat(const uint32_t addr, float value)
 {
 	if(!emuoffset || NOTWITHINMEMRANGE(addr)) // if gamecube memory has not been init by dolphin or writing to outside of memory range
 		return;
-	__asm__("bswapl %0" : "=r" (value) : "0" (value)); // byteswap in assembly
+	MEM_ByteSwap32((uint32_t *)&value); // byteswap
 	WriteProcessMemory(emuhandle, (LPVOID)(emuoffset + (addr - 0x80000000)), &value, sizeof(value), NULL);
+}
+//==========================================================================
+// Purpose: byteswap input value
+// Parameter: pointer of value (must be 4 byte long)
+//==========================================================================
+static void MEM_ByteSwap32(uint32_t *input)
+{
+	const uint8_t *inputarray = ((uint8_t *)input); // set byte array to input
+	*input = (uint32_t)((inputarray[0] << 24) | (inputarray[1] << 16) | (inputarray[2] << 8) | (inputarray[3])); // reassign input to swapped value
 }
