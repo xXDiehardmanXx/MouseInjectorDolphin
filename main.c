@@ -116,8 +116,8 @@ static void GUI_Init(void)
 static void GUI_Welcome(void)
 {
 	printf("\n    Mouse Injector for %s %s\n%s\n\n   Addendum - Please Read before Use\n\n\n", DOLPHINVERSION, BUILDINFO, LINE);
-	printf("    1)  This is a unfinished test, expect issues and crashes\n\n");
-	printf("    2)  You must use the included Dolphin bundle or it will not work\n\n");
+	printf("    1)  This is a unfinished alpha - expect issues and crashes\n\n");
+	printf("    2)  This only works with the included official %s build\n\n", DOLPHINVERSION);
 	printf("    3)  Please do not install over different versions of Dolphin\n\n");
 	printf("    4)  All sub-systems are unsupported - use arrow keys for sentries/cameras\n\n");
 	printf("    5)  NetPlay is unsupported - it will not synchronize memory injection\n\n");
