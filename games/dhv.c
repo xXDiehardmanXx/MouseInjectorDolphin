@@ -29,16 +29,16 @@
 #define CROSSHAIRX 0.5399999022f // 0x3F0A3D6F
 #define CROSSHAIRY 0.3779999614f // 0x3EC18936
 // DHV ADDRESSES - OFFSET ADDRESSES BELOW (REQUIRES PLAYERBASE TO USE)
-#define DHV_camx 0x8090F8F8 - 0x8090C3F0
-#define DHV_camy 0x8090F8F0 - 0x8090C3F0
-#define DHV_height 0x8090E384 - 0x8090C3F0
-#define DHV_crosshairx 0x8090F908 - 0x8090C3F0
-#define DHV_crosshairy 0x8090F90C - 0x8090C3F0
-#define DHV_health 0x8090D4A8 - 0x8090C3F0
-#define DHV_fov 0x808A28F0 - 0x808A28D8
+#define DHV_camx 0x811DCBA8 - 0x811D96A0
+#define DHV_camy 0x811DCBA0 - 0x811D96A0
+#define DHV_height 0x811DB634 - 0x811D96A0
+#define DHV_crosshairx 0x811DCBB8 - 0x811D96A0
+#define DHV_crosshairy 0x811DCBBC - 0x811D96A0
+#define DHV_health 0x811DA758 - 0x811D96A0
+#define DHV_fov 0x803459C8 - 0x8032D140
 // STATIC ADDRESSES BELOW
-#define DHV_playerbase 0x8032C178 // playable character pointer (random stack address because this game does not keep the player's pointer in one spot)
-#define DHV_fovbase 0x8032CA68 // fov base pointer
+#define DHV_playerbase 0x8032C02C // random stack address, commonly holds player pointer - requires sanity checks before using!
+#define DHV_fovbase 0x80317F30
 
 static uint8_t DHV_Status(void);
 static uint8_t DHV_DetectPlayer(void);
@@ -73,19 +73,20 @@ static uint8_t DHV_DetectPlayer(void)
 {
 	const uint32_t tempfovbase = MEM_ReadUInt(DHV_fovbase);
 	const uint32_t tempfov = MEM_ReadUInt(tempfovbase + DHV_fov);
-	if(WITHINMEMRANGE(tempfovbase) && tempfov >= 0x3D8F5C29U && tempfov <= 0x3F99999AU)
+	if(WITHINMEMRANGE(tempfovbase) && tempfov >= 0x3D8F5C29U && tempfov <= 0x3F99999AU) // if fov base is valid, use fov pointer for level
 		fovbase = tempfovbase;
 	const uint32_t tempplayerbase = MEM_ReadUInt(DHV_playerbase);
-	const uint32_t tempcamx = MEM_ReadUInt(tempplayerbase + DHV_camx);
-	const uint32_t tempcamy = MEM_ReadUInt(tempplayerbase + DHV_camy);
-	const uint32_t tempcrosshairx = MEM_ReadUInt(tempplayerbase + DHV_crosshairx);
-	const uint32_t tempcrosshairy = MEM_ReadUInt(tempplayerbase + DHV_crosshairy);
-	const uint32_t temphealth = MEM_ReadUInt(tempplayerbase + DHV_health);
-	const uint32_t tempheight = MEM_ReadUInt(tempplayerbase + DHV_height);
-	if(WITHINMEMRANGE(tempplayerbase) && tempcamx < 0x40C90FDBU && tempcamy == 0 && tempcrosshairx == 0 && tempcrosshairy == 0 && temphealth > 0 && temphealth <= 0x3F800000U && tempheight == 0x40400000U) // test for valid player pointer
+	if(WITHINMEMRANGE(tempplayerbase)) // if pointer is valid, sanity check pointer
 	{
-		playerbase = tempplayerbase;
-		return 1;
+		const uint32_t tempcrosshairx = MEM_ReadUInt(tempplayerbase + DHV_crosshairx);
+		const uint32_t tempcrosshairy = MEM_ReadUInt(tempplayerbase + DHV_crosshairy);
+		const uint32_t temphealth = MEM_ReadUInt(tempplayerbase + DHV_health);
+		const uint32_t tempheight = MEM_ReadUInt(tempplayerbase + DHV_height);
+		if(tempcrosshairx == 0 && tempcrosshairy == 0 && temphealth > 0 && temphealth <= 0x3F800000U && tempheight == 0x40400000U) // if player base is valid, use player pointer for level
+		{
+			playerbase = tempplayerbase;
+			return 1;
+		}
 	}
 	return WITHINMEMRANGE(playerbase);
 }

@@ -1,6 +1,6 @@
-# Mouse Injector for Dolphin 5.0 (11827)
+# Mouse Injector for Dolphin 5.0 (11836)
 
-* [dolphin-5.0-11827-mouse-injector.7z](https://github.com/carnivoroussociety/MouseInjectorDolphin/releases/download/v0.31/dolphin-5.0-11827-mouse-injector.7z)
+* [dolphin-5.0-11836-mouse-injector.7z](https://github.com/carnivoroussociety/MouseInjectorDolphin/releases/download/v0.31/dolphin-5.0-11836-mouse-injector.7z)
 
 A external app that injects cursor input into game memory, bundled with Dolphin emulator.
 
@@ -22,7 +22,7 @@ Follow the quick start guide in the included readme.txt file
 | Medal of Honor: European Assault | :heavy_multiplication_x: | Good | <sup>None</sub> |
 | Medal of Honor: Rising Sun | :heavy_multiplication_x: | Poor | <sup>Looking down scope while in turret mode is broken</sub> |
 | Call of Duty 2: Big Red One | :heavy_multiplication_x: | Good | <sup>None</sub> |
-| Die Hard: Vendetta | :heavy_multiplication_x: | Fair | <sup>Aiming sometimes breaks - sentry mode not supported</sub> |
+| Die Hard: Vendetta | :heavy_multiplication_x: | Fair | <sup>Sentry mode not supported</sub> |
 
 # ManyMouse
 
