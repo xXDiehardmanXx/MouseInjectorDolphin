@@ -76,13 +76,11 @@ static uint8_t DHV_DetectPlayer(void)
 	if(WITHINMEMRANGE(tempfovbase) && tempfov >= 0x3D8F5C29U && tempfov <= 0x3F99999AU) // if fov base is valid, use fov pointer for level
 		fovbase = tempfovbase;
 	const uint32_t tempplayerbase = MEM_ReadUInt(DHV_playerbase);
-	if(WITHINMEMRANGE(tempplayerbase)) // if pointer is valid, sanity check pointer
+	if(WITHINMEMRANGE(tempplayerbase) && tempplayerbase != playerbase) // if pointer is valid, sanity check pointer
 	{
-		const uint32_t tempcrosshairx = MEM_ReadUInt(tempplayerbase + DHV_crosshairx);
-		const uint32_t tempcrosshairy = MEM_ReadUInt(tempplayerbase + DHV_crosshairy);
 		const uint32_t temphealth = MEM_ReadUInt(tempplayerbase + DHV_health);
 		const uint32_t tempheight = MEM_ReadUInt(tempplayerbase + DHV_height);
-		if(tempcrosshairx == 0 && tempcrosshairy == 0 && temphealth > 0 && temphealth <= 0x3F800000U && tempheight == 0x40400000U) // if player base is valid, use player pointer for level
+		if(temphealth > 0 && temphealth <= 0x3F800000U && tempheight == 0x40400000U) // if player base is valid, use player pointer for level
 		{
 			playerbase = tempplayerbase;
 			return 1;

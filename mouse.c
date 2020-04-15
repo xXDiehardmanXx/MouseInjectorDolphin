@@ -26,7 +26,7 @@ int32_t xmouse, ymouse; // holds mouse input data (used for gamedrivers)
 
 static POINT mouselock; // center screen X and Y var for mouse
 static ManyMouseEvent event; // hold current mouse event
-static unsigned char lockmousecounter = 0; // limit SetCursorPos execution
+static uint8_t lockmousecounter = 0; // limit SetCursorPos execution
 
 uint8_t MOUSE_Init(void);
 void MOUSE_Quit(void);
