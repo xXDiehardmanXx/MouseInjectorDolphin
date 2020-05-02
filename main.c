@@ -162,7 +162,7 @@ static void GUI_Interact(void)
 	}
 	if(K_PLUS && !locksettings && !updateinterface) // numpad plus (+)
 	{
-		if(selectedoption == EDITINGSENSITIVITY && sensitivity < 100)
+		if(selectedoption == EDITINGSENSITIVITY && sensitivity < 200)
 			sensitivity++, updateinterface = 1;
 		if(selectedoption == EDITINGCROSSHAIR && crosshair < 18 && GAME_CrosshairSwaySupported())
 			crosshair++, updateinterface = 1;
@@ -295,7 +295,7 @@ static void INI_Load(void)
 		fclose(fileptr); // close the file stream
 		if(counter == 5) // check if mouseinjector.ini length is valid
 		{
-			sensitivity = ClampInt(atoi(line[0]), 1, 100);
+			sensitivity = ClampInt(atoi(line[0]), 1, 200);
 			crosshair = ClampInt(atoi(line[1]), 0, 18);
 			invertpitch = !(!atoi(line[2]));
 			locksettings = !(!atoi(line[3]));
