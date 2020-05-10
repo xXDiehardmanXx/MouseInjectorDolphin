@@ -42,7 +42,7 @@ static const GAMEDRIVER GAMEDRIVER_INTERFACE =
 	"Serious Sam: Next Encounter",
 	SERIOUS_Status,
 	SERIOUS_Inject,
-	13, // if tickrate is any lower, mouse input will get sluggish
+	15, // if tickrate is any lower, mouse input will get sluggish
 	0 // crosshair sway not supported for driver
 };
 
