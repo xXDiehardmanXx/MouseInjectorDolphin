@@ -5,8 +5,8 @@
 A external app that injects cursor input into game memory, bundled with Dolphin emulator.
 
 ## Please Note
-#### This is an unfinished, alpha prototype. Game support is poor beyond mouselook hooks.
-I have no intentions of maintaining this software. Pull requests will be ignored.
+#### This injector is COMPLETELY AND ABSOLUTELY UNSUPPORTED, WITHOUT PREJUDICE. 
+#### The original author does NOT support this project anymore, and any questions directed to me will be IGNORED
 
 # How to Use
 Follow the quick start guide in the included readme.txt file
