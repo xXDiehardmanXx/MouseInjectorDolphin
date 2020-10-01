@@ -166,6 +166,7 @@ void MEM_WriteUInt(const uint32_t addr, uint32_t value)
 void MEM_WriteFloat(const uint32_t addr, float value)
 {
 	if(!emuoffset || NOTWITHINMEMRANGE(addr)) // if gamecube memory has not been init by dolphin or writing to outside of memory range
+		//
 		return;
 	MEM_ByteSwap32((uint32_t *)&value); // byteswap
 	WriteProcessMemory(emuhandle, (LPVOID)(emuoffset + (addr - 0x80000000)), &value, sizeof(value), NULL);
